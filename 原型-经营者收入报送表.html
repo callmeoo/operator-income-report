@@ -253,7 +253,8 @@
         <option value="2026-01">2026-01</option>
       </select>
       <label>经营者搜索：</label>
-      <input id="search-input" type="text" placeholder="名称/用户名/统一社会信用代码" style="min-width: 320px;" oninput="currentPage=1;render()">
+      <input id="search-input" type="text" placeholder="名称/用户名/统一社会信用代码" style="min-width: 320px;" oninput="currentPage=1;render()" onkeydown="if(event.key==='Enter'){currentPage=1;render();}">
+      <button class="btn btn-primary" onclick="currentPage=1;render()">搜索</button>
       <div class="right">
         <button class="btn btn-spec" onclick="toggleSpec()">需求说明</button>
         <button class="btn btn-export" onclick="exportExcel()">导出 Excel</button>
