@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>经营者与从业人员收入信息报送表 - 原型 Demo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; color: #1f2329; background: #f5f7fa; font-size: 13px; }
+
+  /* ===== 顶部演示控制条 ===== */
+  .demo-bar { background: #fffbe6; border-bottom: 1px solid #ffe58f; padding: 10px 24px; display: flex; align-items: center; gap: 16px; font-size: 13px; }
+  .demo-bar .demo-tag { background: #faad14; color: #fff; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 12px; }
+  .demo-bar .demo-text { color: #594300; }
+  .demo-bar .toggle-group { display: flex; background: #fff; border: 1px solid #d9d9d9; border-radius: 4px; overflow: hidden; margin-left: auto; }
+  .demo-bar .toggle-group button { padding: 6px 14px; border: none; background: transparent; cursor: pointer; font-size: 13px; color: #595959; border-right: 1px solid #d9d9d9; }
+  .demo-bar .toggle-group button:last-child { border-right: none; }
+  .demo-bar .toggle-group button.active { background: #1677ff; color: #fff; }
+  .demo-bar .scheme-desc { color: #ad6800; font-size: 12px; padding-left: 8px; }
+
+  /* ===== 整体布局 ===== */
+  .layout { display: flex; min-height: calc(100vh - 50px); }
+  .content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+  /* ===== 侧边栏 ===== */
+  .sidebar { width: 180px; background: #2c3e50; color: #c9d1d9; flex-shrink: 0; padding-top: 8px; }
+  .sidebar .menu-parent { padding: 14px 20px; color: #fff; font-size: 14px; display: flex; justify-content: space-between; align-items: center; background: #34495e; cursor: pointer; }
+  .sidebar .menu-parent .arrow { font-size: 12px; color: #c9d1d9; transform: rotate(180deg); transition: transform 0.2s; }
+  .sidebar .menu-item { padding: 12px 20px 12px 32px; font-size: 13px; color: #c9d1d9; cursor: pointer; }
+  .sidebar .menu-item:hover { background: #34495e; color: #fff; }
+  .sidebar .menu-item.active { background: #1677ff; color: #fff; }
+
+  /* ===== 顶部面包屑栏 ===== */
+  .header-bar { background: #fff; border-bottom: 1px solid #f0f0f0; padding: 12px 24px; display: flex; align-items: center; gap: 12px; font-size: 13px; }
+  .header-bar .menu-toggle { font-size: 18px; color: #4e5969; cursor: pointer; padding: 0 6px; }
+  .header-bar .home-icon { color: #1677ff; font-size: 14px; }
+  .header-bar .crumb { color: #8c8c8c; }
+  .header-bar .crumb-sep { color: #d9d9d9; margin: 0 4px; }
+  .header-bar .crumb.current { color: #1f2329; font-weight: 500; }
+
+  /* ===== Tab 导航 ===== */
+  .tab-nav { background: #fff; border-bottom: 1px solid #f0f0f0; padding: 0 24px; display: flex; gap: 0; overflow-x: auto; }
+  .tab-nav .tab-item { padding: 12px 18px; font-size: 13px; color: #4e5969; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .tab-nav .tab-item:hover { color: #1677ff; }
+  .tab-nav .tab-item.active { color: #1677ff; font-weight: 500; border-bottom-color: #1677ff; }
+  .tab-nav .tab-item.new-tab { position: relative; }
+  .tab-nav .tab-item.new-tab::after { content: 'NEW'; position: absolute; top: 4px; right: 0; background: #ff4d4f; color: #fff; font-size: 9px; padding: 1px 4px; border-radius: 2px; transform: scale(0.85); }
+
+  /* ===== 主内容区 ===== */
+  .main { padding: 16px 24px 32px; overflow-x: auto; }
+  .page-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .page-subtitle { color: #8c8c8c; font-size: 12px; margin-bottom: 16px; }
+
+  /* ===== 筛选条 ===== */
+  .filter-bar { background: #fff; border: 1px solid #e5e6eb; border-radius: 4px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .filter-bar label { color: #4e5969; }
+  .filter-bar input, .filter-bar select { padding: 6px 10px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 13px; min-width: 160px; }
+  .filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: #1677ff; }
+  .btn { padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; border: 1px solid #d9d9d9; background: #fff; }
+  .btn:hover { border-color: #4096ff; color: #4096ff; }
+  .btn-primary { background: #1677ff; color: #fff; border-color: #1677ff; }
+  .btn-primary:hover { background: #4096ff; border-color: #4096ff; color: #fff; }
+  .btn-export { background: #1677ff; color: #fff; border-color: #1677ff; }
+  .btn-export:hover { background: #4096ff; border-color: #4096ff; color: #fff; }
+  .btn-spec { background: #fa541c; color: #fff; border-color: #fa541c; font-weight: 500; box-shadow: 0 0 0 0 rgba(250,84,28,0.55); animation: spec-pulse 1.8s infinite; }
+  .btn-spec:hover { background: #d4380d; border-color: #d4380d; color: #fff; animation: none; }
+  @keyframes spec-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(250,84,28,0.55); }
+    70%  { box-shadow: 0 0 0 10px rgba(250,84,28,0); }
+    100% { box-shadow: 0 0 0 0 rgba(250,84,28,0); }
+  }
+  .filter-bar .right { margin-left: auto; display: flex; gap: 8px; }
+
+  /* ===== 数据汇总卡片 ===== */
+  .summary-bar { background: #fff; border: 1px solid #e5e6eb; border-radius: 4px; padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .summary { display: flex; gap: 32px; font-size: 12px; flex: 1; flex-wrap: wrap; }
+  .summary-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .summary-item { display: flex; flex-direction: column; }
+  .summary-label { color: #8c8c8c; font-size: 12px; }
+  .summary-value { color: #1f2329; font-size: 16px; font-weight: 600; margin-top: 2px; }
+  .btn-values { background: #722ed1; color: #fff; border-color: #722ed1; font-weight: 500; }
+  .btn-values:hover { background: #531dab; border-color: #531dab; color: #fff; }
+
+  /* ===== 需求说明 inline 面板 ===== */
+  .spec-panel { background: #fff; border: 1px solid #e5e6eb; border-radius: 4px; margin-bottom: 12px; display: none; }
+  .spec-panel.show { display: block; }
+  .spec-panel .spec-panel-header { padding: 12px 18px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; background: #fafafa; border-radius: 4px 4px 0 0; }
+  .spec-panel .spec-panel-header h3 { font-size: 14px; font-weight: 600; color: #1f2329; }
+  .spec-panel .spec-panel-header .spec-meta { color: #8c8c8c; font-size: 12px; margin-top: 2px; }
+  .spec-panel .spec-panel-header .spec-meta-warn { color: #cf1322; font-weight: 500; font-size: 12px; margin-top: 4px; }
+  .spec-panel .spec-panel-close { font-size: 18px; color: #8c8c8c; cursor: pointer; padding: 2px 8px; border-radius: 4px; line-height: 1; }
+  .spec-panel .spec-panel-close:hover { background: #f0f0f0; color: #1f2329; }
+  .spec-panel .spec-panel-body { padding: 16px 20px 20px; }
+  .spec-panel .spec-tabs { display: flex; gap: 0; padding: 0 18px; background: #fff; border-bottom: 1px solid #f0f0f0; }
+  .spec-panel .spec-tab { padding: 10px 18px; font-size: 13px; color: #4e5969; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .spec-panel .spec-tab:hover { color: #1677ff; }
+  .spec-panel .spec-tab.active { color: #1677ff; font-weight: 500; border-bottom-color: #1677ff; }
+  .spec-panel .spec-tab-panel { display: none; }
+  .spec-panel .spec-tab-panel.active { display: block; }
+
+  /* ===== 待确认事项 — 案例卡片 ===== */
+  .spec-banner-warn { background: #fff2f0; border: 1px solid #ffccc7; border-left: 4px solid #ff4d4f; border-radius: 4px; padding: 12px 16px; color: #a8071a; font-size: 13px; line-height: 1.7; font-weight: 500; margin-bottom: 16px; }
+  .spec-banner-warn strong { color: #cf1322; }
+  .summary-value.money { color: #1677ff; }
+
+  /* ===== 报送表标题 ===== */
+  .report-title { text-align: center; font-size: 16px; font-weight: 600; padding: 14px 0 10px; color: #1f2329; background: #fff; border: 1px solid #e5e6eb; border-bottom: none; border-radius: 4px 4px 0 0; }
+
+  /* ===== 表格 ===== */
+  .table-wrap { background: #fff; border: 1px solid #e5e6eb; border-top: none; border-radius: 0 0 4px 4px; overflow: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 1700px; }
+  .report-table th, .report-table td { border: 1px solid #d9d9d9; text-align: center; }
+  th, td { padding: 8px 10px; font-size: 12px; white-space: nowrap; vertical-align: middle; }
+  thead th { background: #fafafa; font-weight: 600; color: #1f2329; }
+  .report-table thead th { background: #f0f5ff; color: #1f2329; line-height: 1.5; }
+  .report-table thead tr.col-num-row th { background: #fafafa; color: #8c8c8c; font-weight: normal; font-size: 11px; font-style: italic; }
+  .report-table thead th.role-col { background: #fff7e6; color: #d46b08; }
+  .report-table tbody td.role-col { background: #fffbe6; }
+  tbody tr:hover td { background: #fafafa !important; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; padding-right: 12px; }
+  td.center { text-align: center; }
+  td.text-left { text-align: left; padding-left: 10px; }
+  .tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; }
+  .tag-normal { background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
+  .tag-buyer { background: #f0f5ff; color: #1677ff; border: 1px solid #91caff; }
+  .tag-seller { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
+  .tag-provider { background: #f9f0ff; color: #722ed1; border: 1px solid #d3adf7; }
+  .tag-both { background: #fff1f0; color: #cf1322; border: 1px solid #ffa39e; }
+  .zero-row td { color: #bfbfbf; }
+  .zero-row .num { color: #bfbfbf; }
+
+  /* ===== 提示气泡 ===== */
+  .help-icon { display: inline-block; width: 14px; height: 14px; line-height: 14px; text-align: center; border-radius: 50%; background: #d9d9d9; color: #fff; font-size: 11px; margin-left: 4px; cursor: help; position: relative; }
+  .help-icon:hover { background: #1677ff; }
+  .help-icon .tooltip { display: none; position: absolute; top: 22px; left: -10px; background: #1f2329; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: normal; white-space: normal; width: 260px; z-index: 100; line-height: 1.6; }
+  .help-icon:hover .tooltip { display: block; }
+  .help-icon .tooltip::before { content: ""; position: absolute; top: -5px; left: 14px; border: 5px solid transparent; border-bottom-color: #1f2329; }
+
+  /* ===== 分页 ===== */
+  .pagination { padding: 12px 16px; background: #fff; border: 1px solid #e5e6eb; border-top: none; display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: 12px; color: #4e5969; flex-wrap: wrap; }
+  .pagination .total { margin-right: 12px; }
+  .pagination button { min-width: 30px; height: 30px; padding: 0 10px; border: 1px solid #d9d9d9; background: #fff; border-radius: 3px; cursor: pointer; font-size: 12px; color: #4e5969; }
+  .pagination button:hover:not(:disabled):not(.active) { color: #1677ff; border-color: #1677ff; }
+  .pagination button.active { background: #1677ff; color: #fff; border-color: #1677ff; font-weight: 500; }
+  .pagination button:disabled { color: #d9d9d9; cursor: not-allowed; background: #f5f5f5; }
+  .pagination .ellipsis { padding: 0 4px; color: #8c8c8c; min-width: 20px; text-align: center; }
+  .pagination .page-size { height: 30px; padding: 0 8px; border: 1px solid #d9d9d9; border-radius: 3px; margin-left: 12px; background: #fff; cursor: pointer; font-size: 12px; color: #4e5969; }
+  .pagination .jump { margin-left: 12px; display: flex; align-items: center; gap: 6px; }
+  .pagination .jump input { width: 50px; height: 30px; border: 1px solid #d9d9d9; border-radius: 3px; padding: 0 6px; text-align: center; font-size: 12px; }
+  .pagination .jump input:focus { outline: none; border-color: #1677ff; }
+
+  /* ===== 弹窗 ===== */
+  .modal-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; }
+  .modal-mask.show { display: flex; }
+  .modal { background: #fff; border-radius: 6px; padding: 24px 28px; min-width: 360px; max-width: 480px; }
+  .modal h3 { font-size: 16px; margin-bottom: 12px; }
+  .modal p { color: #4e5969; line-height: 1.7; margin-bottom: 16px; font-size: 13px; }
+  .modal .actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* ===== 需求说明弹窗 ===== */
+  .modal-spec { background: #fff; border-radius: 6px; width: 820px; max-width: 92vw; max-height: 86vh; display: flex; flex-direction: column; }
+  .modal-spec .spec-header { padding: 18px 24px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+  .modal-spec .spec-header h3 { font-size: 16px; font-weight: 600; color: #1f2329; }
+  .modal-spec .spec-header .spec-meta { color: #8c8c8c; font-size: 12px; margin-top: 4px; }
+  .modal-spec .spec-close { font-size: 20px; color: #8c8c8c; cursor: pointer; line-height: 1; padding: 4px 8px; border-radius: 4px; }
+  .modal-spec .spec-close:hover { background: #f5f5f5; color: #1f2329; }
+  .modal-spec .spec-body { padding: 16px 24px 20px; overflow-y: auto; flex: 1; }
+  .modal-spec .spec-section, .spec-panel .spec-section { margin-bottom: 18px; }
+  .modal-spec .spec-section:last-child, .spec-panel .spec-section:last-child { margin-bottom: 0; }
+  .modal-spec .spec-section-title, .spec-panel .spec-section-title { font-size: 14px; font-weight: 600; color: #1677ff; margin-bottom: 8px; padding-left: 8px; border-left: 3px solid #1677ff; }
+  .modal-spec .spec-section ul, .spec-panel .spec-section ul { padding-left: 22px; color: #4e5969; line-height: 1.8; font-size: 13px; }
+  .modal-spec .spec-section ul li, .spec-panel .spec-section ul li { margin-bottom: 4px; }
+  .modal-spec .spec-section ul li strong, .spec-panel .spec-section ul li strong { color: #1f2329; }
+  .modal-spec .spec-section p, .spec-panel .spec-section p { color: #4e5969; line-height: 1.8; font-size: 13px; margin-bottom: 6px; }
+  .modal-spec .spec-tip, .spec-panel .spec-tip { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 4px; padding: 10px 14px; color: #594300; font-size: 12px; line-height: 1.7; }
+  .modal-spec .spec-table, .spec-panel .spec-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .modal-spec .spec-table th, .modal-spec .spec-table td, .spec-panel .spec-table th, .spec-panel .spec-table td { border: 1px solid #e5e6eb; padding: 6px 10px; text-align: left; }
+  .modal-spec .spec-table th, .spec-panel .spec-table th { background: #fafafa; font-weight: 600; color: #1f2329; }
+  .modal-spec .spec-table td code, .spec-panel .spec-table td code { background: #f5f5f5; padding: 1px 4px; border-radius: 2px; font-size: 11px; color: #d46b08; }
+  .modal-spec .spec-footer { padding: 12px 24px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* ===== 需求说明 - 示例图块 ===== */
+  .spec-img-block { background: #fafafa; border: 1px solid #e5e6eb; border-radius: 4px; padding: 12px; margin-top: 12px; }
+  .spec-img-caption { font-size: 12px; font-weight: 600; color: #1f2329; margin-bottom: 8px; }
+  .spec-img-caption strong { color: #d4380d; }
+  .spec-img { display: block; width: 100%; max-width: 100%; height: auto; border: 1px solid #d9d9d9; border-radius: 3px; cursor: zoom-in; background: #fff; }
+  .spec-img-note { font-size: 12px; color: #4e5969; margin-top: 8px; line-height: 1.7; padding-left: 4px; }
+  .spec-img-note strong { color: #d4380d; }
+  .spec-img-missing { display: flex; align-items: center; justify-content: center; min-height: 120px; background: #fffbe6; border: 1px dashed #ffd591; color: #ad6800; font-size: 12px; padding: 20px; text-align: center; line-height: 1.8; border-radius: 3px; }
+
+  /* ===== 图片放大查看遮罩 ===== */
+  .img-zoom-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; align-items: center; justify-content: center; cursor: zoom-out; }
+  .img-zoom-mask.show { display: flex; }
+  .img-zoom-mask img { max-width: 95vw; max-height: 95vh; box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
+
+  /* ===== 底部 ===== */
+  .footer { color: #8c8c8c; font-size: 12px; margin-top: 16px; padding: 12px 0; }
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部演示控制条 ===== -->
+<div class="demo-bar">
+  <span class="demo-tag">DEMO</span>
+  <span class="demo-text">这是给业务方确认需求的可视化原型，非真实功能；数据为 Mock。</span>
+</div>
+
+<div class="layout">
+<!-- ===== 侧边栏 ===== -->
+<aside class="sidebar">
+  <div class="menu-parent">
+    <span>财务管理</span>
+    <span class="arrow">›</span>
+  </div>
+  <div class="menu-item active">报表管理</div>
+</aside>
+
+<div class="content">
+<!-- ===== 顶部面包屑 ===== -->
+<div class="header-bar">
+  <span class="menu-toggle">☰</span>
+  <span class="home-icon">⌂</span>
+  <span class="crumb">首页</span>
+  <span class="crumb-sep">/</span>
+  <span class="home-icon">●</span>
+  <span class="crumb">财务管理</span>
+  <span class="crumb-sep">/</span>
+  <span class="crumb current">报表管理</span>
+</div>
+
+<!-- ===== Tab 横向导航 ===== -->
+<div class="tab-nav">
+  <div class="tab-item">订单报表</div>
+  <div class="tab-item">收益明细</div>
+  <div class="tab-item">成交报表</div>
+  <div class="tab-item">专场成交报表</div>
+  <div class="tab-item">资金日统计报表</div>
+  <div class="tab-item">流拍报表</div>
+  <div class="tab-item">过户报表</div>
+  <div class="tab-item">交易报表</div>
+  <div class="tab-item">业务部门经营情况表</div>
+  <div class="tab-item active new-tab">经营者收入报送表</div>
+</div>
+
+<!-- ===== 主内容区 ===== -->
+<main class="main">
+    <!-- ===== 筛选条 ===== -->
+    <div class="filter-bar">
+      <label>报表月份：</label>
+      <select id="month-select" onchange="currentPage=1;render()">
+        <option value="2026-04">2026-04</option>
+        <option value="2026-03">2026-03</option>
+        <option value="2026-02">2026-02</option>
+        <option value="2026-01">2026-01</option>
+      </select>
+      <label>经营者搜索：</label>
+      <input id="search-input" type="text" placeholder="名称/用户名/统一社会信用代码" style="min-width: 320px;" oninput="currentPage=1;render()">
+      <div class="right">
+        <button class="btn btn-spec" onclick="toggleSpec()">需求说明</button>
+        <button class="btn btn-export" onclick="exportExcel()">导出 Excel</button>
+      </div>
+    </div>
+
+    <!-- ===== 数据汇总 ===== -->
+    <div class="summary-bar">
+      <div class="summary" id="summary"></div>
+    </div>
+
+    <!-- ===== 需求说明 inline 面板 ===== -->
+    <div class="spec-panel" id="spec-panel">
+      <div class="spec-panel-header">
+        <div>
+          <h3>经营者与从业人员收入信息报送表 · 需求说明</h3>
+        </div>
+        <span class="spec-panel-close" onclick="toggleSpec()">✕</span>
+      </div>
+      <div class="spec-tabs">
+        <div class="spec-tab active" data-tab="1" onclick="switchSpecTab(1)">① 背景与报送对象</div>
+        <div class="spec-tab" data-tab="2" onclick="switchSpecTab(2)">② 字段取值口径</div>
+        <div class="spec-tab" data-tab="3" onclick="switchSpecTab(3)">③ 生成机制与展示</div>
+        <div class="spec-tab" data-tab="4" onclick="switchSpecTab(4)">④ 待确认事项</div>
+      </div>
+
+      <div class="spec-panel-body">
+        <!-- Tab 1：背景与目标 + 报送对象 -->
+        <div class="spec-tab-panel active" id="spec-tab-1">
+          <div class="spec-section">
+            <div class="spec-section-title">1. 背景与目标</div>
+            <p>为满足《互联网平台企业涉税信息报送》合规要求，按月度对平台已实名认证的经营者收入数据进行汇总归档，供财务报送税局。报表需做到：完整覆盖、数据准确、版本归档（月度快照）、可按模板导出 Excel。</p>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">2. 报送对象（经营者）</div>
+            <ul>
+              <li><strong>经营者</strong>：实名认证 = 已通过 且 认证主体类型 ∈ {企业, 个体工商户}的卖家（门店/车主，须为企业或个体）+ 服务商。</li>
+              <li><strong>卖家定义</strong>：订单表中，车款付款给到的用户 —— 可能是<strong>车主</strong>，也可能是<strong>门店</strong>。</li>
+              <li><strong>服务商定义</strong>（涵盖以下两类）：
+                <ol style="padding-left:22px;margin-top:4px;">
+                  <li><strong>订单表中的"服务商"角色</strong>：撮合买卖双方交易的中间服务商（如订单详情页中的"服务商"账户，收取过户/服务佣金）。</li>
+                  <li><strong>衍生服务订单 - 项目与服务商管理中的服务商</strong>：在第三方服务下挂载的合作商（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险等），<strong>须为已认证的企业或个体工商户</strong>。</li>
+                </ol>
+              </li>
+              <li><strong>零流水经营者</strong>：已认证但当月零流水的，仍输出一行，金额/笔数全部填 0。</li>
+            </ul>
+
+            <div class="spec-img-block">
+              <div class="spec-img-caption">📷 示例 1：订单详情页 — 标注「<strong>卖方取值</strong>」与「<strong>服务商取值 1</strong>」</div>
+              <img src="图片示例1-订单详情.png" alt="订单详情中的卖方与服务商取值示例" class="spec-img"
+                   onclick="zoomImg(this)"
+                   onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>图片示例1-订单详情.png</code> 未找到，请将订单详情截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
+              <div class="spec-img-note">▸ 红框「车主/卖家」与「门店」对应清算款项接收方 = <strong>卖家取值</strong>（车款付款给到的账户）；<br>▸ 红框「服务商」（如截图中"广州市智茂汽车服务有限公司"）对应 = <strong>服务商取值 1</strong>。</div>
+            </div>
+
+            <div class="spec-img-block">
+              <div class="spec-img-caption">📷 示例 2：服务中心 → 衍生服务订单 → 项目与服务商管理 — <strong>服务商取值 2</strong></div>
+              <img src="服务商取值_2.png" alt="项目与服务商管理中的服务合作商" class="spec-img"
+                   onclick="zoomImg(this)"
+                   onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>服务商取值_2.png</code> 未找到，请将"项目与服务商管理"截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
+              <div class="spec-img-note">▸ 第三方服务下挂载的「<strong>服务合作商</strong>」（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险 等）= <strong>服务商取值 2</strong>，须为已认证的企业或个体工商户。</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2：字段取值口径 -->
+        <div class="spec-tab-panel" id="spec-tab-2">
+          <div class="spec-section">
+            <div class="spec-section-title">3. 字段取值口径</div>
+
+            <table class="spec-table">
+              <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>是否已取得登记证照</td><td>固定填 <code>是</code>。</td></tr>
+                <tr><td>2</td><td>名称（姓名）</td><td>取实名认证信息中的<strong>主体名称</strong>（企业全称 / 个体工商户名称），对应字段 <code>accountName</code></td></tr>
+                <tr><td>3</td><td>统一社会信用代码<br>（纳税人识别号）</td><td>取实名认证信息中的<strong>统一社会信用代码</strong>，对应字段 <code>creditCode</code>。旧称「组织机构代码」已统一并入此项</td></tr>
+                <tr><td>4</td><td>收入来源的互联网平台名称</td><td>固定填 <code>唯普汽车</code>（平台运营主体名称，全表统一）</td></tr>
+                <tr><td>5</td><td>收入来源的店铺<br>（用户）名称</td><td></td></tr>
+                <tr><td>6</td><td>收入来源的店铺（用户）<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识</td></tr>
+                <tr><td>7</td><td>销售货物收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算月份</strong>归集（跨月计入次月）。<br><span style="color:#cf1322;font-weight:600;">公式：卖家「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）</span><br><span style="display:inline-block;margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;font-size:11px;line-height:1.7;">📌 <strong>案例</strong>：某卖家本月一次合并提现包含 3 笔流水 —— ① 售车款 <code>+50,000</code>、② 售车款 <code>+30,000</code>、③ 售后仲裁退款 <code>−5,000</code>，合并清算到账 <code>75,000</code>。<br>列 7 收入总额 = <code>50,000 + 30,000 = 80,000</code>（<strong>剔除</strong>第 ③ 笔负数 <code>−5,000</code>），第 ③ 笔的绝对值 <code>5,000</code> 归集到列 8 退款金额。</span></td></tr>
+                <tr><td>8</td><td>销售货物退款金额</td><td><strong>退款金额</strong>：售后流水中，从卖家账户中扣款金额汇总（不包售后卖家账户正向流水）</td></tr>
+                <tr><td>9</td><td>销售货物收入净额</td><td><code>列 9 = 列 7 − 列 8</code></td></tr>
+                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算月份</strong>归集（跨月计入次月）。<br><span style="color:#cf1322;font-weight:600;">公式：服务商「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）+ 汇和零售溢价</span></td></tr>
+                <tr><td>11</td><td>销售服务退款金额</td><td><strong>退款金额</strong>：售后流水中，从服务商账户中扣款金额汇总（不包售后服务商账户正向流水）</td></tr>
+                <tr><td>12</td><td>销售服务收入净额</td><td><code>列 12 = 列 10 − 列 11</code></td></tr>
+                <tr><td>13</td><td>交易（订单）数量</td><td>提现订单数 − 退车订单数；卖家 + 服务商订单合并填一列</td></tr>
+              </tbody>
+            </table>
+
+            <p style="margin-top:12px;"><strong>汇和零售溢价</strong></p>
+            <p>因汇和垫款订单量少，统一按零售溢价计入服务商收入。</p>
+            <p>来源：钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。</p>
+          </div>
+        </div>
+
+        <!-- Tab 3：生成机制与展示 -->
+        <div class="spec-tab-panel" id="spec-tab-3">
+          <div class="spec-section">
+            <div class="spec-section-title">4. 生成机制与展示</div>
+            <ul>
+              <li><strong>频率与时机</strong>：每月 1 日 00:00 自动触发，覆盖上一个自然月的清算/订单数据。</li>
+              <li><strong>版本归档</strong>：生成即锁定快照，事后流水变动不影响已生成期间的数据（物化到归档表）。</li>
+              <li><strong>列表功能</strong>：月份筛选（默认当前月-1）+ 经营者搜索（<code>accountName</code> / <code>userName</code> / 统一社会信用代码 模糊匹配）+ 分页（10/20/50/100 条/页）。</li>
+              <li><strong>导出</strong>：Excel，带合并表头，导出当前筛选条件下全部数据（不分页）。</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tab 4：待确认事项 -->
+        <div class="spec-tab-panel" id="spec-tab-4">
+          <div class="spec-section">
+            <div class="spec-section-title">5. 待确认事项</div>
+
+            <table class="spec-table">
+              <thead><tr><th style="width:40px;">#</th><th>内容</th><th style="width:120px;">负责方</th></tr></thead>
+              <tbody>
+                <tr><td>Q1</td><td>历史月份是否允许重算？</td><td>财务</td></tr>
+                <tr><td>Q2</td><td>导出文件命名规则（如 <code>经营者收入报送表_202504.xlsx</code>）是否有合规格式要求？</td><td>财务</td></tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== 报送表标题 ===== -->
+    <div class="report-title">平台内的经营者收入报送信息表</div>
+
+    <!-- ===== 表格 ===== -->
+    <div class="table-wrap">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th rowspan="3">序号</th>
+            <th rowspan="3">是否已取得<br>登记证照</th>
+            <th colspan="2">已取得登记证照</th>
+            <th rowspan="3">收入来源的<br>互联网平台名称</th>
+            <th rowspan="3">收入来源的<br>店铺（用户）名称</th>
+            <th rowspan="3">收入来源的店铺<br>（用户）唯一标识码</th>
+            <th rowspan="3" class="role-col">角色<span class="help-icon">?<span class="tooltip">平台内部审计列（非官方报送列），用于标识 userName 对应主体的角色。导出 Excel 时一并包含该列。</span></span></th>
+            <th colspan="6">已取得登记证照的平台内经营者收入信息</th>
+            <th rowspan="3">交易（订单）<br>数量（笔）</th>
+          </tr>
+          <tr>
+            <th rowspan="2">名称（姓名）</th>
+            <th rowspan="2">统一社会信用代码<br>（纳税人识别号）</th>
+            <th colspan="3">销售货物取得的收入</th>
+            <th colspan="3">销售服务取得的收入</th>
+          </tr>
+          <tr>
+            <th>收入总额</th>
+            <th>退款金额</th>
+            <th>收入净额</th>
+            <th>收入总额</th>
+            <th>退款金额</th>
+            <th>收入净额</th>
+          </tr>
+          <tr class="col-num-row">
+            <th>序</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th class="role-col">*</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9 = 7−8</th>
+            <th>10</th>
+            <th>11</th>
+            <th>12 = 10−11</th>
+            <th>13</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+
+</main>
+</div>
+</div>
+
+<!-- ===== 字段取值说明弹窗 ===== -->
+<div class="modal-mask" id="spec-modal" onclick="closeSpec(event)">
+  <div class="modal-spec" onclick="event.stopPropagation()">
+    <div class="spec-header">
+      <div>
+        <h3>经营者与从业人员收入信息报送表 · 字段取值说明</h3>
+        <div class="spec-meta">列 1~13 的具体取数公式与口径，研发实现参考</div>
+      </div>
+      <span class="spec-close" onclick="document.getElementById('spec-modal').classList.remove('show')">✕</span>
+    </div>
+    <div class="spec-body">
+
+      <div class="spec-section">
+        <div class="spec-section-title">一、背景与目标</div>
+        <p>为满足《互联网平台企业涉税信息报送》合规要求，按月度对平台已实名认证的经营者收入数据进行汇总归档，供财务报送税局。报表需做到：完整覆盖、数据准确、版本归档（月度快照）、可按模板导出 Excel。</p>
+      </div>
+
+      <div class="spec-section">
+        <div class="spec-section-title">二、报送对象（经营者）</div>
+        <ul>
+          <li><strong>经营者</strong>：实名认证 = 已通过 且 认证主体类型 ∈ {企业, 个体工商户}的卖家（门店/车主，须为企业或个体）+ 服务商。</li>
+          <li><strong>卖家定义</strong>：订单表中，车款付款给到的用户 —— 可能是<strong>车主</strong>，也可能是<strong>门店</strong>。</li>
+          <li><strong>服务商定义</strong>（涵盖以下两类）：
+            <ol style="padding-left:22px;margin-top:4px;">
+              <li><strong>订单表中的"服务商"角色</strong>：撮合买卖双方交易的中间服务商（如订单详情页中的"服务商"账户，收取过户/服务佣金）。</li>
+              <li><strong>衍生服务订单 - 项目与服务商管理中的服务商</strong>：在第三方服务下挂载的合作商（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险等），<strong>须为已认证的企业或个体工商户</strong>。</li>
+            </ol>
+          </li>
+        </ul>
+
+        <div class="spec-img-block">
+          <div class="spec-img-caption">📷 示例 1：订单详情页 — 标注「<strong>卖方取值</strong>」与「<strong>服务商取值 1</strong>」</div>
+          <img src="图片示例1-订单详情.png" alt="订单详情中的卖方与服务商取值示例" class="spec-img"
+               onclick="zoomImg(this)"
+               onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>图片示例1-订单详情.png</code> 未找到，请将订单详情截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
+          <div class="spec-img-note">▸ 红框「车主/卖家」与「门店」对应清算款项接收方 = <strong>卖家取值</strong>（车款付款给到的账户）；<br>▸ 红框「服务商」（如截图中"广州市智茂汽车服务有限公司"）对应 = <strong>服务商取值 1</strong>。</div>
+        </div>
+
+        <div class="spec-img-block">
+          <div class="spec-img-caption">📷 示例 2：服务中心 → 衍生服务订单 → 项目与服务商管理 — <strong>服务商取值 2</strong></div>
+          <img src="服务商取值_2.png" alt="项目与服务商管理中的服务合作商" class="spec-img"
+               onclick="zoomImg(this)"
+               onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>服务商取值_2.png</code> 未找到，请将"项目与服务商管理"截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
+          <div class="spec-img-note">▸ 第三方服务下挂载的「<strong>服务合作商</strong>」（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险 等）= <strong>服务商取值 2</strong>，须为已认证的企业或个体工商户。</div>
+        </div>
+      </div>
+
+      <div class="spec-section">
+        <div class="spec-section-title">三、列 1~6 字段取值</div>
+        <table class="spec-table">
+          <thead><tr><th style="width:60px;">列</th><th style="width:200px;">字段</th><th>取值逻辑</th></tr></thead>
+          <tbody>
+            <tr><td>列 1</td><td>是否已取得登记证照</td><td>固定填 <code>是</code>。报送对象限定为「实名认证已通过 且 主体类型 ∈ {企业, 个体工商户}」，已具备登记证照。</td></tr>
+            <tr><td>列 2</td><td>名称（姓名）</td><td>取实名认证信息中的<strong>主体名称</strong>（企业全称 / 个体工商户名称），对应字段 <code>accountName</code>。</td></tr>
+            <tr><td>列 3</td><td>统一社会信用代码<br>（纳税人识别号）</td><td>取实名认证信息中的<strong>统一社会信用代码</strong>，对应字段 <code>creditCode</code>。旧称「组织机构代码」已统一并入此项。</td></tr>
+            <tr><td>列 4</td><td>收入来源的互联网平台名称</td><td>固定填 <code>唯普汽车</code>（平台运营主体名称，全表统一）。</td></tr>
+            <tr><td>列 5</td><td>收入来源的店铺（用户）名称</td><td>同列 2，取 <code>accountName</code>。官方模板要求展示店铺/用户名称，与认证主体名称一致。</td></tr>
+            <tr><td>列 6</td><td>收入来源的店铺（用户）<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识。</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="spec-section">
+        <div class="spec-section-title">四、列 7~12 金额口径</div>
+        <p><strong>4.1 收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按 <strong>清算月份</strong> 归集（跨月计入次月）。卖家流水 → 销售收入（列 7）；服务商流水 → 服务收入（列 10）。</p>
+        <p><strong>4.2 退款金额</strong>：按官方模板拆为两栏（列 8 / 列 11）。退款必须经仲裁产生，仲裁负数款项需从收入总额中剔除并归集到对应退款列。</p>
+        <table class="spec-table">
+          <thead><tr><th>口径</th><th>公式</th></tr></thead>
+          <tbody>
+            <tr><td>销售货物收入总额（列 7）</td><td>卖家「已提现已清算」流水汇总 − 卖家「提现仲裁负数款项」</td></tr>
+            <tr><td>销售货物退款金额（列 8）</td><td>卖家「提现仲裁负数款项」绝对值汇总</td></tr>
+            <tr><td>销售货物收入净额（列 9）</td><td><code>列9 = 列7 − 列8</code></td></tr>
+            <tr><td>销售服务收入总额（列 10）</td><td>服务商「已提现已清算」流水汇总 − 服务商「提现仲裁负数款项」（含汇和零售溢价）</td></tr>
+            <tr><td>销售服务退款金额（列 11）</td><td>服务商「提现仲裁负数款项」绝对值汇总</td></tr>
+            <tr><td>销售服务收入净额（列 12）</td><td><code>列12 = 列10 − 列11</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="spec-section">
+        <div class="spec-section-title">五、列 13 交易笔数</div>
+        <ul>
+          <li><strong>提现订单数</strong>：按提现任务清算完成时间归集；同一订单分多次提现按 1 单计。</li>
+          <li><strong>退车订单数</strong>：发生售后仲裁需要退车的订单数（卖家退车时，服务商佣金也需退回）。</li>
+          <li><strong>净订单数 = 提现订单数 − 退车订单数</strong>；模板只 1 列，同一 <code>userName</code> 卖家+服务商订单合并填入。</li>
+        </ul>
+      </div>
+
+      <div class="spec-section">
+        <div class="spec-section-title">六、汇和零售溢价</div>
+        <p>因汇和垫款订单量少，<strong>统一按零售溢价计入服务商收入</strong>。来源：钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。</p>
+      </div>
+
+      <div class="spec-section">
+        <div class="spec-section-title">七、生成机制与展示</div>
+        <ul>
+          <li><strong>频率与时机</strong>：每月 1 日 00:00 自动触发，覆盖上一个自然月的清算/订单数据。</li>
+          <li><strong>版本归档</strong>：生成即锁定快照，事后流水变动不影响已生成期间的数据（物化到归档表）。</li>
+          <li><strong>列表功能</strong>：月份筛选（默认当前月-1）+ 经营者搜索（<code>accountName</code> / <code>userName</code> / 统一社会信用代码 模糊匹配）+ 分页。</li>
+          <li><strong>导出</strong>：Excel，带合并表头，导出当前筛选条件下全部数据（不分页）。</li>
+        </ul>
+      </div>
+
+      <div class="spec-section">
+        <div class="spec-section-title">八、其他说明</div>
+        <ul>
+          <li><strong>零流水经营者</strong>：已认证但当月零流水的，仍输出一行，金额/笔数全部填 0。</li>
+        </ul>
+      </div>
+
+      <div class="spec-section">
+        <div class="spec-section-title">九、待确认事项</div>
+        <table class="spec-table">
+          <thead><tr><th style="width:40px;">#</th><th>内容</th><th style="width:120px;">负责方</th></tr></thead>
+          <tbody>
+            <tr><td>Q1</td><td>历史月份是否允许重算？</td><td>财务</td></tr>
+            <tr><td>Q2</td><td>导出文件命名规则（如 <code>经营者收入报送表_202504.xlsx</code>）是否有合规格式要求</td><td>财务</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="spec-tip">
+        💡 完整需求文档见仓库根目录：<code>需求文档-经营者收入报送表.md</code>。本弹窗为快速参考，以最终定稿文档为准。
+      </div>
+
+    </div>
+    <div class="spec-footer">
+      <button class="btn btn-primary" onclick="document.getElementById('spec-modal').classList.remove('show')">我知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 图片放大遮罩 ===== -->
+<div class="img-zoom-mask" id="img-zoom-mask" onclick="this.classList.remove('show')">
+  <img id="img-zoom-target" src="" alt="放大查看">
+</div>
+
+<!-- ===== 导出弹窗 ===== -->
+<div class="modal-mask" id="modal" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>导出确认</h3>
+    <p>将按上方筛选条件导出 <strong id="export-month">2026-04</strong> 报送表 Excel 文件，含合并表头，文件名格式：<code id="export-filename">经营者收入报送表_202604.xls</code></p>
+    <div class="actions">
+      <button class="btn" onclick="document.getElementById('modal').classList.remove('show')">取消</button>
+      <button class="btn btn-primary" onclick="doExport()">确认导出</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Mock 数据（按官方报送表口径：销售货物三项 + 销售服务三项） =====
+// goods = 销售货物收入总额, goodsRefund = 销售货物退款, service = 销售服务收入总额, serviceRefund = 销售服务退款
+// roleA: 角色互斥单选场景；roleB: 多角色兼具场景（数组）
+const PLATFORM_NAME = '唯普汽车';
+const DATA = {
+  '2026-04': [
+    // 1. 纯卖家-企业（门店）
+    { userName: 'HL76054912039', accountName: '广州市鹏成汽车销售有限公司', creditCode: '91440101MA9X1234A',
+      roleA: '卖家', roleB: ['卖家'],
+      A: { goods: 1856000.00, goodsRefund: 32000.00, service: 0, serviceRefund: 0, orders: 18 },
+      B: { goods: 1856000.00, goodsRefund: 32000.00, service: 0, serviceRefund: 0, orders: 18 } },
+    // 2. 纯卖家-个体工商户（车主）
+    { userName: 'HL13877234123', accountName: '深圳市福田区李伟二手车经营部', creditCode: '92440300MA9Y5678B',
+      roleA: '卖家', roleB: ['卖家'],
+      A: { goods: 567500.00, goodsRefund: 0, service: 0, serviceRefund: 0, orders: 6 },
+      B: { goods: 567500.00, goodsRefund: 0, service: 0, serviceRefund: 0, orders: 6 } },
+    // 3. 纯服务商
+    { userName: 'T2112230002', accountName: '佛山市禅城区粤泰汽车服务有限公司', creditCode: '91440605MA9Z1122C',
+      roleA: '服务商', roleB: ['服务商'],
+      A: { goods: 0, goodsRefund: 0, service: 89400.00, serviceRefund: 4500.00, orders: 24 },
+      B: { goods: 0, goodsRefund: 0, service: 89400.00, serviceRefund: 4500.00, orders: 24 } },
+    // 4. 既卖家又服务商（方案A强制选其一=服务商；方案B两口径并存）
+    { userName: 'HL98712340567', accountName: '东莞市汇通汽车贸易服务商', creditCode: '91441900MA9A3344D',
+      roleA: '服务商', roleB: ['卖家','服务商'],
+      A: { goods: 0, goodsRefund: 0, service: 156700.00, serviceRefund: 0, orders: 31 },
+      B: { goods: 425000.00, goodsRefund: 8200.00, service: 156700.00, serviceRefund: 0, orders: 39 } },
+    // 5. 纯卖家-大额企业
+    { userName: 'HL55443322110', accountName: '中山市启航汽车有限公司', creditCode: '91442000MA9B5566E',
+      roleA: '卖家', roleB: ['卖家'],
+      A: { goods: 2340000.00, goodsRefund: 0, service: 0, serviceRefund: 0, orders: 25 },
+      B: { goods: 2340000.00, goodsRefund: 0, service: 0, serviceRefund: 0, orders: 25 } },
+    // 6. 零流水已认证经营者
+    { userName: 'T2112230006', accountName: '珠海市横琴新区诚信汽车销售有限公司', creditCode: '91440400MA9C7788F',
+      roleA: '卖家', roleB: ['卖家'],
+      A: { goods: 0, goodsRefund: 0, service: 0, serviceRefund: 0, orders: 0 },
+      B: { goods: 0, goodsRefund: 0, service: 0, serviceRefund: 0, orders: 0 } },
+    // 7. 服务商-含零售溢价
+    { userName: 'HL10293847562', accountName: '惠州市惠城区粤运汽车过户代办服务部', creditCode: '92441300MA9D9900G',
+      roleA: '服务商', roleB: ['服务商'],
+      A: { goods: 0, goodsRefund: 0, service: 67800.00, serviceRefund: 0, orders: 22 },
+      B: { goods: 0, goodsRefund: 0, service: 67800.00, serviceRefund: 0, orders: 22 } },
+    // 8. 既卖家又服务商（方案A按卖家口径；方案B两口径并存）
+    { userName: 'HL66554433221', accountName: '江门市蓬江区华兴汽车销售服务有限公司', creditCode: '91440703MA9E0011H',
+      roleA: '卖家', roleB: ['卖家','服务商'],
+      A: { goods: 1120000.00, goodsRefund: 18000.00, service: 0, serviceRefund: 0, orders: 14 },
+      B: { goods: 1120000.00, goodsRefund: 18000.00, service: 34500.00, serviceRefund: 0, orders: 19 } },
+  ],
+  '2026-03': [
+    { userName: 'HL76054912039', accountName: '广州市鹏成汽车销售有限公司', creditCode: '91440101MA9X1234A',
+      roleA: '卖家', roleB: ['卖家'],
+      A: { goods: 1632000.00, goodsRefund: 22000.00, service: 0, serviceRefund: 0, orders: 15 },
+      B: { goods: 1632000.00, goodsRefund: 22000.00, service: 0, serviceRefund: 0, orders: 15 } },
+    { userName: 'T2112230002', accountName: '佛山市禅城区粤泰汽车服务有限公司', creditCode: '91440605MA9Z1122C',
+      roleA: '服务商', roleB: ['服务商'],
+      A: { goods: 0, goodsRefund: 0, service: 76300.00, serviceRefund: 1200.00, orders: 19 },
+      B: { goods: 0, goodsRefund: 0, service: 76300.00, serviceRefund: 1200.00, orders: 19 } },
+  ],
+  '2026-02': [],
+  '2026-01': [],
+};
+
+// 扩展 Mock 数据，让分页能真正翻页演示（伪随机，可复现）
+(function fillMock() {
+  const cities = ['广州','深圳','佛山','东莞','中山','珠海','惠州','江门','肇庆','清远','汕头','湛江','茂名'];
+  const districts = ['天河','海珠','越秀','白云','荔湾','南山','福田','宝安','禅城','南海','顺德'];
+  const surnames = ['张','王','李','陈','黄','刘','吴','周','郑','何','林','梁','徐','马'];
+  const types = [
+    { suffix: '汽车销售有限公司', role: '卖家' },
+    { suffix: '二手车经营部',     role: '卖家' },
+    { suffix: '机动车经销部',     role: '卖家' },
+    { suffix: '汽车贸易有限公司',  role: '卖家' },
+    { suffix: '汽车服务有限公司',  role: '服务商' },
+    { suffix: '汽车过户代办服务部', role: '服务商' },
+    { suffix: '汽车销售服务部',    role: '卖家' },
+  ];
+  const list = DATA['2026-04'];
+  const TARGET = 35;
+  for (let i = list.length; i < TARGET; i++) {
+    const city = cities[i % cities.length];
+    const dist = districts[(i * 3) % districts.length];
+    const surname = surnames[(i * 7) % surnames.length];
+    const t = types[(i * 5) % types.length];
+    const accountName = `${city}市${dist}区${surname}${t.suffix}`;
+    const userName = 'HL' + String(10000000000 + i * 1357913).slice(-11);
+    const creditCode = '914' + String(40000 + i * 211).padStart(5, '0') + 'MA9' + String(1000 + i * 91).slice(-4) + 'ABCDEFGHJK'[i % 10];
+    const role = t.role;
+    const goods = role === '卖家' ? ((i * 173 + 200) % 2800) * 1000 : 0;
+    const goodsRefund = goods > 0 && (i % 4 === 0) ? Math.round(goods * 0.025) : 0;
+    const service = role === '服务商' ? ((i * 67 + 30) % 180) * 1000 : 0;
+    const serviceRefund = service > 0 && (i % 5 === 0) ? Math.round(service * 0.04) : 0;
+    const orders = Math.floor((goods + service) / 60000) + (role === '服务商' ? 6 : 1);
+    const row = {
+      userName, accountName, creditCode,
+      roleA: role, roleB: [role],
+      A: { goods, goodsRefund, service, serviceRefund, orders },
+      B: { goods, goodsRefund, service, serviceRefund, orders }
+    };
+    list.push(row);
+  }
+})();
+
+let currentMode = 'A';
+let currentPage = 1;
+let pageSize = 10;
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btn-mode-a').classList.toggle('active', mode === 'A');
+  document.getElementById('btn-mode-b').classList.toggle('active', mode === 'B');
+  document.getElementById('scheme-desc').textContent = mode === 'A'
+    ? '同一 userName 仅一种角色，销售/服务两栏仅一栏有值'
+    : '同一 userName 可同时是卖家+服务商，销售/服务两栏可并存';
+  render();
+}
+
+function fmtMoney(n) {
+  if (n === 0) return '0.00';
+  return n.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function getRow(item, mode) {
+  const data = mode === 'A' ? item.A : item.B;
+  let role;
+  if (mode === 'A') {
+    role = item.roleA;
+  } else {
+    role = item.roleB.length === 2 ? '卖家+服务商' : item.roleB[0];
+  }
+  return { role, ...data };
+}
+
+function render() {
+  const month = document.getElementById('month-select').value;
+  const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+  const filtered = (DATA[month] || []).filter(item =>
+    !keyword || item.accountName.toLowerCase().includes(keyword)
+      || item.userName.toLowerCase().includes(keyword)
+      || item.creditCode.toLowerCase().includes(keyword)
+  );
+
+  // 汇总（基于过滤后的全部数据，不受分页影响）
+  let sumGoods = 0, sumGoodsRefund = 0, sumService = 0, sumServiceRefund = 0, sumOrders = 0;
+  filtered.forEach(item => {
+    const r = getRow(item, currentMode);
+    sumGoods += r.goods; sumGoodsRefund += r.goodsRefund;
+    sumService += r.service; sumServiceRefund += r.serviceRefund;
+    sumOrders += r.orders;
+  });
+
+  // 分页切片
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+  const startIdx = (currentPage - 1) * pageSize;
+  const pagedRows = filtered.slice(startIdx, startIdx + pageSize);
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="15" style="text-align:center;color:#8c8c8c;padding:48px 0;">当月暂无数据</td></tr>`;
+  } else {
+    pagedRows.forEach((item, idx) => {
+      const r = getRow(item, currentMode);
+      const goodsNet = r.goods - r.goodsRefund;
+      const serviceNet = r.service - r.serviceRefund;
+      let roleTag;
+      if (r.role === '卖家') roleTag = '<span class="tag tag-seller">卖家</span>';
+      else if (r.role === '服务商') roleTag = '<span class="tag tag-provider">服务商</span>';
+      else roleTag = '<span class="tag tag-both">卖家+服务商</span>';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="center">${startIdx + idx + 1}</td>
+        <td class="center">是</td>
+        <td class="text-left">${item.accountName}</td>
+        <td>${item.creditCode}</td>
+        <td>${PLATFORM_NAME}</td>
+        <td class="text-left">${item.accountName}</td>
+        <td>${item.userName}</td>
+        <td class="role-col">${roleTag}</td>
+        <td class="num">${fmtMoney(r.goods)}</td>
+        <td class="num">${fmtMoney(r.goodsRefund)}</td>
+        <td class="num"><strong>${fmtMoney(goodsNet)}</strong></td>
+        <td class="num">${fmtMoney(r.service)}</td>
+        <td class="num">${fmtMoney(r.serviceRefund)}</td>
+        <td class="num"><strong>${fmtMoney(serviceNet)}</strong></td>
+        <td class="num">${r.orders}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+  renderPagination(filtered.length, totalPages);
+
+  const sumGoodsNet = sumGoods - sumGoodsRefund;
+  const sumServiceNet = sumService - sumServiceRefund;
+  document.getElementById('summary').innerHTML = `
+    <div class="summary-item"><span class="summary-label">报送经营者数</span><span class="summary-value">${filtered.length}</span></div>
+    <div class="summary-item"><span class="summary-label">销售货物收入净额</span><span class="summary-value money">¥ ${fmtMoney(sumGoodsNet)}</span></div>
+    <div class="summary-item"><span class="summary-label">销售服务收入净额</span><span class="summary-value money">¥ ${fmtMoney(sumServiceNet)}</span></div>
+    <div class="summary-item"><span class="summary-label">销售货物退款合计</span><span class="summary-value">¥ ${fmtMoney(sumGoodsRefund)}</span></div>
+    <div class="summary-item"><span class="summary-label">销售服务退款合计</span><span class="summary-value">¥ ${fmtMoney(sumServiceRefund)}</span></div>
+    <div class="summary-item"><span class="summary-label">交易订单数合计</span><span class="summary-value">${sumOrders}</span></div>
+  `;
+}
+
+function resetFilter() {
+  document.getElementById('month-select').value = '2026-04';
+  document.getElementById('search-input').value = '';
+  currentPage = 1;
+  render();
+}
+
+// ===== 分页渲染 =====
+function renderPagination(total, totalPages) {
+  const container = document.getElementById('pagination');
+  if (total === 0) {
+    container.innerHTML = `<span class="total">共 <strong>0</strong> 条</span>`;
+    return;
+  }
+  const pages = computePages(currentPage, totalPages);
+  let html = `<span class="total">共 <strong>${total}</strong> 条</span>`;
+  html += `<button onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+  pages.forEach(p => {
+    if (p === '...') {
+      html += `<span class="ellipsis">···</span>`;
+    } else {
+      html += `<button class="${p === currentPage ? 'active' : ''}" onclick="goPage(${p})">${p}</button>`;
+    }
+  });
+  html += `<button onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+  html += `<select class="page-size" onchange="changePageSize(this.value)">`;
+  [10, 20, 50, 100].forEach(s => {
+    html += `<option value="${s}" ${s === pageSize ? 'selected' : ''}>${s} 条/页</option>`;
+  });
+  html += `</select>`;
+  html += `<span class="jump">跳至 <input type="number" min="1" max="${totalPages}" id="jump-input" onkeydown="if(event.key==='Enter')jumpPage()"> 页</span>`;
+  container.innerHTML = html;
+}
+
+function computePages(current, total) {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const pages = [1];
+  if (current > 4) pages.push('...');
+  const start = Math.max(2, current - 2);
+  const end = Math.min(total - 1, current + 2);
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (current < total - 3) pages.push('...');
+  pages.push(total);
+  return pages;
+}
+
+function goPage(p) {
+  currentPage = p;
+  render();
+}
+
+function changePageSize(s) {
+  pageSize = parseInt(s);
+  currentPage = 1;
+  render();
+}
+
+function jumpPage() {
+  const input = document.getElementById('jump-input');
+  const v = parseInt(input.value);
+  if (v && v >= 1) {
+    currentPage = v;
+    render();
+  }
+}
+
+// ===== 扩展 Mock 数据（让分页可演示） =====
+(function fillMockData() {
+  const cities = ['广州','深圳','佛山','东莞','中山','珠海','惠州','江门','肇庆','清远','梅州','汕头','湛江','茂名'];
+  const districts = ['天河区','海珠区','越秀区','白云区','荔湾区','南山区','福田区','宝安区','龙岗区'];
+  const surnames = ['张','王','李','赵','陈','黄','周','吴','刘','杨','林','郑'];
+  const sellerSuffix = ['汽车销售有限公司','二手车经营部','汽车贸易公司','车行','机动车经销部','二手车销售服务部'];
+  const providerSuffix = ['汽车服务有限公司','汽车过户代办服务部','车务代办中心'];
+  for (let i = 1; i <= 27; i++) {
+    const isService = i % 4 === 0;
+    const city = cities[(i * 3) % cities.length];
+    const district = districts[(i * 5) % districts.length];
+    const surname = surnames[(i * 7) % surnames.length];
+    const suffix = isService ? providerSuffix[i % providerSuffix.length] : sellerSuffix[i % sellerSuffix.length];
+    const accountName = `${city}市${district}${surname}氏${suffix}`;
+    const userName = `HL${String(10000000000 + i * 1234567).slice(-11)}`;
+    const creditCode = `9144${String(101 + i % 99).padStart(4,'0')}MA9${String(1000 + i * 31).padStart(4,'0')}${'ABCDEFGH'[i % 8]}`;
+    let goods = 0, goodsRefund = 0, service = 0, serviceRefund = 0, orders = 0;
+    if (isService) {
+      service = 50000 + (i * 13579) % 200000;
+      serviceRefund = i % 3 === 0 ? Math.round(service * 0.04) : 0;
+      orders = Math.floor(service / 5000) + 5;
+    } else {
+      goods = 200000 + (i * 67891) % 2800000;
+      goodsRefund = i % 4 === 0 ? Math.round(goods * 0.02) : 0;
+      orders = Math.floor(goods / 100000) + 2;
+    }
+    const role = isService ? '服务商' : '卖家';
+    const payload = { goods, goodsRefund, service, serviceRefund, orders };
+    DATA['2026-04'].push({
+      userName, accountName, creditCode,
+      roleA: role, roleB: [role],
+      A: payload, B: { ...payload }
+    });
+  }
+})();
+
+function exportExcel() {
+  const month = document.getElementById('month-select').value;
+  document.getElementById('export-month').textContent = month;
+  document.getElementById('export-filename').textContent = `经营者收入报送表_${month.replace('-','')}.xls`;
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(e) {
+  if (e.target.id === 'modal') document.getElementById('modal').classList.remove('show');
+}
+
+function showSpec() {
+  document.getElementById('spec-modal').classList.add('show');
+}
+
+function toggleSpec() {
+  document.getElementById('spec-panel').classList.toggle('show');
+}
+
+function switchSpecTab(n) {
+  document.querySelectorAll('#spec-panel .spec-tab').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.tab) === n);
+  });
+  document.querySelectorAll('#spec-panel .spec-tab-panel').forEach(el => {
+    el.classList.toggle('active', el.id === 'spec-tab-' + n);
+  });
+}
+
+function showValues() {
+  document.getElementById('spec-modal').classList.add('show');
+}
+
+function closeSpec(e) {
+  if (e.target.id === 'spec-modal') document.getElementById('spec-modal').classList.remove('show');
+}
+
+function zoomImg(imgEl) {
+  const mask = document.getElementById('img-zoom-mask');
+  document.getElementById('img-zoom-target').src = imgEl.src;
+  mask.classList.add('show');
+}
+
+function doExport() {
+  const month = document.getElementById('month-select').value;
+  const keyword = document.getElementById('search-input').value.trim().toLowerCase();
+  const rows = (DATA[month] || []).filter(item =>
+    !keyword || item.accountName.toLowerCase().includes(keyword)
+      || item.userName.toLowerCase().includes(keyword)
+      || item.creditCode.toLowerCase().includes(keyword)
+  );
+
+  let html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8">
+  <style>table{border-collapse:collapse}td,th{border:1px solid #888;padding:6px 8px;font-size:12px;text-align:center}thead th{background:#dbeafe;font-weight:bold}.title{font-size:14px;font-weight:bold;text-align:center;padding:10px 0}.num{text-align:right}</style>
+  </head><body>
+  <div class="title">平台内的经营者收入报送信息表（${month}）</div>
+  <table>
+    <thead>
+      <tr>
+        <th rowspan="3">序号</th>
+        <th rowspan="3">是否已取得登记证照</th>
+        <th colspan="2">已取得登记证照</th>
+        <th rowspan="3">收入来源的互联网平台名称</th>
+        <th rowspan="3">收入来源的店铺（用户）名称</th>
+        <th rowspan="3">收入来源的店铺（用户）唯一标识码</th>
+        <th rowspan="3">角色</th>
+        <th colspan="6">已取得登记证照的平台内经营者收入信息</th>
+        <th rowspan="3">交易（订单）数量（笔）</th>
+      </tr>
+      <tr>
+        <th rowspan="2">名称（姓名）</th>
+        <th rowspan="2">统一社会信用代码（纳税人识别号）</th>
+        <th colspan="3">销售货物取得的收入</th>
+        <th colspan="3">销售服务取得的收入</th>
+      </tr>
+      <tr>
+        <th>收入总额</th><th>退款金额</th><th>收入净额</th>
+        <th>收入总额</th><th>退款金额</th><th>收入净额</th>
+      </tr>
+    </thead>
+    <tbody>`;
+  rows.forEach((item, idx) => {
+    const r = getRow(item, currentMode);
+    const goodsNet = r.goods - r.goodsRefund;
+    const serviceNet = r.service - r.serviceRefund;
+    html += `<tr>
+      <td>${idx + 1}</td><td>是</td>
+      <td>${item.accountName}</td><td>${item.creditCode}</td>
+      <td>${PLATFORM_NAME}</td><td>${item.accountName}</td><td>${item.userName}</td>
+      <td>${r.role}</td>
+      <td class="num">${fmtMoney(r.goods)}</td><td class="num">${fmtMoney(r.goodsRefund)}</td><td class="num">${fmtMoney(goodsNet)}</td>
+      <td class="num">${fmtMoney(r.service)}</td><td class="num">${fmtMoney(r.serviceRefund)}</td><td class="num">${fmtMoney(serviceNet)}</td>
+      <td class="num">${r.orders}</td>
+    </tr>`;
+  });
+  html += `</tbody></table></body></html>`;
+
+  const blob = new Blob(['﻿' + html], { type: 'application/vnd.ms-excel' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `经营者收入报送表_${month.replace('-','')}.xls`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  document.getElementById('modal').classList.remove('show');
+}
+
+render();
+</script>
+
+</body>
+</html>
