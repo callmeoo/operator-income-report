@@ -331,7 +331,7 @@
                 <tr><td>2</td><td>名称（姓名）</td><td>取实名认证信息中的<strong>主体名称</strong>（企业全称 / 个体工商户名称），对应字段 <code>accountName</code>。</td></tr>
                 <tr><td>3</td><td>统一社会信用代码<br>（纳税人识别号）</td><td>取实名认证信息中的<strong>统一社会信用代码</strong>，对应字段 <code>creditCode</code>。旧称「组织机构代码」已统一并入此项。</td></tr>
                 <tr><td>4</td><td>收入来源的互联网平台名称</td><td>固定填 <code>唯普汽车</code>（平台运营主体名称，全表统一）。</td></tr>
-                <tr><td>5</td><td>收入来源的店铺<br>（用户）名称</td><td>同列 2，取 <code>accountName</code>。官方模板要求展示店铺/用户名称，与认证主体名称一致。</td></tr>
+                <tr><td>5</td><td>收入来源的店铺<br>（用户）名称</td><td style="color:#f53f3f;font-weight:500;">待财务与税局确认</td></tr>
                 <tr><td>6</td><td>收入来源的店铺（用户）<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识。</td></tr>
                 <tr><td>*</td><td>卖家名称<br><span style="color:#d46b08;font-size:11px;">（平台内部审计列）</span></td><td><strong>取值逻辑</strong>：当主体身份为<strong>卖家</strong>时，取「<strong>门店全称</strong>」或「<strong>车主全称</strong>」——主体为门店则取门店全称，主体为车主则取车主姓名/全称；纯服务商身份此列为空。<br><span style="color:#874d00;font-size:11px;">用途：审计列，便于在 <code>accountName</code> 之外快速识别卖家真实主体。<strong>导出 Excel 时一并包含该列。</strong></span></td></tr>
                 <tr><td>*</td><td>角色<br><span style="color:#d46b08;font-size:11px;">（平台内部审计列）</span></td><td><strong>取值逻辑</strong>：根据主体在订单/衍生服务中的身份打标 —— <code>卖家</code> / <code>服务商</code> / <code>卖家+服务商</code>。<br><span style="color:#874d00;font-size:11px;">用途：审计列，便于快速识别 <code>userName</code> 对应主体的角色，校验列 7-12 取数是否正确。<strong>导出 Excel 时一并包含该列。</strong></span></td></tr>
@@ -403,7 +403,7 @@
                 </div>
               </div>
               <div style="font-size:12px;color:#86909c;line-height:1.7;padding:4px 2px;">
-                💡 <strong>说明</strong>：三类场景按车辆的垫款方式互斥归类 —— 场景 1 覆盖既非汇和垫款也非门店自垫款的常规车辆；场景 2 仅对应汇和垫款；场景 3 仅对应门店自垫款。研发实现时按订单的垫款标记走对应公式即可，无需在场景间做去重。
+                💡 <strong>说明</strong>：三类场景按车辆的垫款方式互斥归类 —— 场景 1 覆盖既非汇和垫款也非门店自垫款的常规车辆；场景 2 仅对应汇和垫款；场景 3 仅对应门店自垫款。
               </div>
             </div>
           </div>
