@@ -80,26 +80,22 @@
   .btn-values { background: #722ed1; color: #fff; border-color: #722ed1; font-weight: 500; }
   .btn-values:hover { background: #531dab; border-color: #531dab; color: #fff; }
 
-  /* ===== 需求说明 inline 面板 ===== */
-  .spec-panel { background: #fff; border: 1px solid #e5e6eb; border-radius: 4px; margin-bottom: 12px; display: none; }
-  .spec-panel.show { display: block; }
-  .spec-panel .spec-panel-header { padding: 12px 18px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; background: #fafafa; border-radius: 4px 4px 0 0; }
-  .spec-panel .spec-panel-header h3 { font-size: 14px; font-weight: 600; color: #1f2329; }
+  /* ===== 需求说明弹框 ===== */
+  .spec-panel { background: #fff; border-radius: 6px; width: 920px; max-width: 92vw; max-height: 86vh; display: flex; flex-direction: column; }
+  .spec-panel .spec-panel-header { padding: 16px 22px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; background: #fafafa; border-radius: 6px 6px 0 0; }
+  .spec-panel .spec-panel-header h3 { font-size: 15px; font-weight: 600; color: #1f2329; }
   .spec-panel .spec-panel-header .spec-meta { color: #8c8c8c; font-size: 12px; margin-top: 2px; }
   .spec-panel .spec-panel-header .spec-meta-warn { color: #cf1322; font-weight: 500; font-size: 12px; margin-top: 4px; }
-  .spec-panel .spec-panel-close { font-size: 18px; color: #8c8c8c; cursor: pointer; padding: 2px 8px; border-radius: 4px; line-height: 1; }
+  .spec-panel .spec-panel-close { font-size: 20px; color: #8c8c8c; cursor: pointer; padding: 4px 10px; border-radius: 4px; line-height: 1; }
   .spec-panel .spec-panel-close:hover { background: #f0f0f0; color: #1f2329; }
-  .spec-panel .spec-panel-body { padding: 16px 20px 20px; }
-  .spec-panel .spec-tabs { display: flex; gap: 0; padding: 0 18px; background: #fff; border-bottom: 1px solid #f0f0f0; }
-  .spec-panel .spec-tab { padding: 10px 18px; font-size: 13px; color: #4e5969; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .spec-panel .spec-panel-body { padding: 18px 22px 22px; overflow-y: auto; flex: 1; }
+  .spec-panel .spec-tabs { display: flex; gap: 0; padding: 0 18px; background: #fff; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; }
+  .spec-panel .spec-tab { padding: 12px 18px; font-size: 13px; color: #4e5969; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
   .spec-panel .spec-tab:hover { color: #1677ff; }
   .spec-panel .spec-tab.active { color: #1677ff; font-weight: 500; border-bottom-color: #1677ff; }
   .spec-panel .spec-tab-panel { display: none; }
   .spec-panel .spec-tab-panel.active { display: block; }
 
-  /* ===== 待确认事项 — 案例卡片 ===== */
-  .spec-banner-warn { background: #fff2f0; border: 1px solid #ffccc7; border-left: 4px solid #ff4d4f; border-radius: 4px; padding: 12px 16px; color: #a8071a; font-size: 13px; line-height: 1.7; font-weight: 500; margin-bottom: 16px; }
-  .spec-banner-warn strong { color: #cf1322; }
   .summary-value.money { color: #1677ff; }
 
   /* ===== 报送表标题 ===== */
@@ -156,27 +152,19 @@
   .modal p { color: #4e5969; line-height: 1.7; margin-bottom: 16px; font-size: 13px; }
   .modal .actions { display: flex; justify-content: flex-end; gap: 8px; }
 
-  /* ===== 需求说明弹窗 ===== */
-  .modal-spec { background: #fff; border-radius: 6px; width: 820px; max-width: 92vw; max-height: 86vh; display: flex; flex-direction: column; }
-  .modal-spec .spec-header { padding: 18px 24px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
-  .modal-spec .spec-header h3 { font-size: 16px; font-weight: 600; color: #1f2329; }
-  .modal-spec .spec-header .spec-meta { color: #8c8c8c; font-size: 12px; margin-top: 4px; }
-  .modal-spec .spec-close { font-size: 20px; color: #8c8c8c; cursor: pointer; line-height: 1; padding: 4px 8px; border-radius: 4px; }
-  .modal-spec .spec-close:hover { background: #f5f5f5; color: #1f2329; }
-  .modal-spec .spec-body { padding: 16px 24px 20px; overflow-y: auto; flex: 1; }
-  .modal-spec .spec-section, .spec-panel .spec-section { margin-bottom: 18px; }
-  .modal-spec .spec-section:last-child, .spec-panel .spec-section:last-child { margin-bottom: 0; }
-  .modal-spec .spec-section-title, .spec-panel .spec-section-title { font-size: 14px; font-weight: 600; color: #1677ff; margin-bottom: 8px; padding-left: 8px; border-left: 3px solid #1677ff; }
-  .modal-spec .spec-section ul, .spec-panel .spec-section ul { padding-left: 22px; color: #4e5969; line-height: 1.8; font-size: 13px; }
-  .modal-spec .spec-section ul li, .spec-panel .spec-section ul li { margin-bottom: 4px; }
-  .modal-spec .spec-section ul li strong, .spec-panel .spec-section ul li strong { color: #1f2329; }
-  .modal-spec .spec-section p, .spec-panel .spec-section p { color: #4e5969; line-height: 1.8; font-size: 13px; margin-bottom: 6px; }
-  .modal-spec .spec-tip, .spec-panel .spec-tip { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 4px; padding: 10px 14px; color: #594300; font-size: 12px; line-height: 1.7; }
-  .modal-spec .spec-table, .spec-panel .spec-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .modal-spec .spec-table th, .modal-spec .spec-table td, .spec-panel .spec-table th, .spec-panel .spec-table td { border: 1px solid #e5e6eb; padding: 6px 10px; text-align: left; }
-  .modal-spec .spec-table th, .spec-panel .spec-table th { background: #fafafa; font-weight: 600; color: #1f2329; }
-  .modal-spec .spec-table td code, .spec-panel .spec-table td code { background: #f5f5f5; padding: 1px 4px; border-radius: 2px; font-size: 11px; color: #d46b08; }
-  .modal-spec .spec-footer { padding: 12px 24px; border-top: 1px solid #f0f0f0; display: flex; justify-content: flex-end; gap: 8px; }
+  /* ===== 需求说明弹框内部样式 ===== */
+  .spec-panel .spec-section { margin-bottom: 18px; }
+  .spec-panel .spec-section:last-child { margin-bottom: 0; }
+  .spec-panel .spec-section-title { font-size: 14px; font-weight: 600; color: #1677ff; margin-bottom: 8px; padding-left: 8px; border-left: 3px solid #1677ff; }
+  .spec-panel .spec-section ul { padding-left: 22px; color: #4e5969; line-height: 1.8; font-size: 13px; }
+  .spec-panel .spec-section ul li { margin-bottom: 4px; }
+  .spec-panel .spec-section ul li strong { color: #1f2329; }
+  .spec-panel .spec-section p { color: #4e5969; line-height: 1.8; font-size: 13px; margin-bottom: 6px; }
+  .spec-panel .spec-tip { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 4px; padding: 10px 14px; color: #594300; font-size: 12px; line-height: 1.7; }
+  .spec-panel .spec-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .spec-panel .spec-table th, .spec-panel .spec-table td { border: 1px solid #e5e6eb; padding: 6px 10px; text-align: left; }
+  .spec-panel .spec-table th { background: #fafafa; font-weight: 600; color: #1f2329; }
+  .spec-panel .spec-table td code { background: #f5f5f5; padding: 1px 4px; border-radius: 2px; font-size: 11px; color: #d46b08; }
 
   /* ===== 需求说明 - 示例图块 ===== */
   .spec-img-block { background: #fafafa; border: 1px solid #e5e6eb; border-radius: 4px; padding: 12px; margin-top: 12px; }
@@ -266,8 +254,9 @@
       <div class="summary" id="summary"></div>
     </div>
 
-    <!-- ===== 需求说明 inline 面板 ===== -->
-    <div class="spec-panel" id="spec-panel">
+    <!-- ===== 需求说明弹框 ===== -->
+    <div class="modal-mask" id="spec-modal-mask" onclick="closeSpec(event)">
+    <div class="spec-panel" id="spec-panel" onclick="event.stopPropagation()">
       <div class="spec-panel-header">
         <div>
           <h3>经营者与从业人员收入信息报送表 · 需求说明</h3>
@@ -275,14 +264,13 @@
         <span class="spec-panel-close" onclick="toggleSpec()">✕</span>
       </div>
       <div class="spec-tabs">
-        <div class="spec-tab active" data-tab="1" onclick="switchSpecTab(1)">① 背景与报送对象</div>
-        <div class="spec-tab" data-tab="2" onclick="switchSpecTab(2)">② 字段取值口径</div>
-        <div class="spec-tab" data-tab="3" onclick="switchSpecTab(3)">③ 生成机制与展示</div>
-        <div class="spec-tab" data-tab="4" onclick="switchSpecTab(4)">④ 待确认事项</div>
+        <div class="spec-tab active" data-tab="1" onclick="switchSpecTab(1)">① 背景·范围·生成机制</div>
+        <div class="spec-tab" data-tab="2" onclick="switchSpecTab(2)">② 字段取值（基础字段）</div>
+        <div class="spec-tab" data-tab="3" onclick="switchSpecTab(3)">③ 字段取值（收入·退款·交易笔数）</div>
       </div>
 
       <div class="spec-panel-body">
-        <!-- Tab 1：背景与目标 + 报送对象 -->
+        <!-- Tab 1：背景与目标 + 报送对象 + 生成机制 -->
         <div class="spec-tab-panel active" id="spec-tab-1">
           <div class="spec-section">
             <div class="spec-section-title">1. 背景与目标</div>
@@ -296,7 +284,7 @@
               <li><strong>卖家定义</strong>：订单表中，车款付款给到的用户 —— 可能是<strong>车主</strong>，也可能是<strong>门店</strong>。</li>
               <li><strong>服务商定义</strong>（涵盖以下两类）：
                 <ol style="padding-left:22px;margin-top:4px;">
-                  <li><strong>订单表中的"服务商"角色</strong>：撮合买卖双方交易的中间服务商（如订单详情页中的"服务商"账户，收取过户/服务佣金）。</li>
+                  <li><strong>订单表中的"服务商"角色</strong>：撮合买卖双方交易的中间服务商（如订单详情页中的"服务商"账户，收取服务佣金）。</li>
                   <li><strong>衍生服务订单 - 项目与服务商管理中的服务商</strong>：在第三方服务下挂载的合作商（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险等），<strong>须为已认证的企业或个体工商户</strong>。</li>
                 </ol>
               </li>
@@ -319,44 +307,11 @@
               <div class="spec-img-note">▸ 第三方服务下挂载的「<strong>服务合作商</strong>」（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险 等）= <strong>服务商取值 2</strong>，须为已认证的企业或个体工商户。</div>
             </div>
           </div>
-        </div>
 
-        <!-- Tab 2：字段取值口径 -->
-        <div class="spec-tab-panel" id="spec-tab-2">
           <div class="spec-section">
-            <div class="spec-section-title">3. 字段取值口径</div>
-
-            <table class="spec-table">
-              <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
-              <tbody>
-                <tr><td>1</td><td>是否已取得登记证照</td><td>固定填 <code>是</code>。</td></tr>
-                <tr><td>2</td><td>名称（姓名）</td><td>取实名认证信息中的<strong>主体名称</strong>（企业全称 / 个体工商户名称），对应字段 <code>accountName</code></td></tr>
-                <tr><td>3</td><td>统一社会信用代码<br>（纳税人识别号）</td><td>取实名认证信息中的<strong>统一社会信用代码</strong>，对应字段 <code>creditCode</code>。旧称「组织机构代码」已统一并入此项</td></tr>
-                <tr><td>4</td><td>收入来源的互联网平台名称</td><td>固定填 <code>唯普汽车</code>（平台运营主体名称，全表统一）</td></tr>
-                <tr><td>5</td><td>收入来源的店铺<br>（用户）名称</td><td></td></tr>
-                <tr><td>6</td><td>收入来源的店铺（用户）<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识</td></tr>
-                <tr><td>7</td><td>销售货物收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算月份</strong>归集（跨月计入次月）。<br><span style="color:#cf1322;font-weight:600;">公式：卖家「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）</span><br><span style="display:inline-block;margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;font-size:11px;line-height:1.7;">📌 <strong>案例</strong>：某卖家本月一次合并提现包含 3 笔流水 —— ① 售车款 <code>+50,000</code>、② 售车款 <code>+30,000</code>、③ 售后仲裁退款 <code>−5,000</code>，合并清算到账 <code>75,000</code>。<br>列 7 收入总额 = <code>50,000 + 30,000 = 80,000</code>（<strong>剔除</strong>第 ③ 笔负数 <code>−5,000</code>），第 ③ 笔的绝对值 <code>5,000</code> 归集到列 8 退款金额。</span></td></tr>
-                <tr><td>8</td><td>销售货物退款金额</td><td><strong>退款金额</strong>：售后流水中，从卖家账户中扣款金额汇总（不包售后卖家账户正向流水）</td></tr>
-                <tr><td>9</td><td>销售货物收入净额</td><td><code>列 9 = 列 7 − 列 8</code></td></tr>
-                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算月份</strong>归集（跨月计入次月）。<br><span style="color:#cf1322;font-weight:600;">公式：服务商「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）+ 汇和零售溢价</span></td></tr>
-                <tr><td>11</td><td>销售服务退款金额</td><td><strong>退款金额</strong>：售后流水中，从服务商账户中扣款金额汇总（不包售后服务商账户正向流水）</td></tr>
-                <tr><td>12</td><td>销售服务收入净额</td><td><code>列 12 = 列 10 − 列 11</code></td></tr>
-                <tr><td>13</td><td>交易（订单）数量</td><td>提现订单数 − 退车订单数；卖家 + 服务商订单合并填一列</td></tr>
-              </tbody>
-            </table>
-
-            <p style="margin-top:12px;"><strong>汇和零售溢价</strong></p>
-            <p>因汇和垫款订单量少，统一按零售溢价计入服务商收入。</p>
-            <p>来源：钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。</p>
-          </div>
-        </div>
-
-        <!-- Tab 3：生成机制与展示 -->
-        <div class="spec-tab-panel" id="spec-tab-3">
-          <div class="spec-section">
-            <div class="spec-section-title">4. 生成机制与展示</div>
+            <div class="spec-section-title">3. 生成机制与展示</div>
             <ul>
-              <li><strong>频率与时机</strong>：每月 1 日 00:00 自动触发，覆盖上一个自然月的清算/订单数据。</li>
+              <li><strong>频率与时机</strong>：每月 1 日 00:00 自动触发，生成上个自然月的数据。</li>
               <li><strong>版本归档</strong>：生成即锁定快照，事后流水变动不影响已生成期间的数据（物化到归档表）。</li>
               <li><strong>列表功能</strong>：月份筛选（默认当前月-1）+ 经营者搜索（<code>accountName</code> / <code>userName</code> / 统一社会信用代码 模糊匹配）+ 分页（10/20/50/100 条/页）。</li>
               <li><strong>导出</strong>：Excel，带合并表头，导出当前筛选条件下全部数据（不分页）。</li>
@@ -364,23 +319,98 @@
           </div>
         </div>
 
-        <!-- Tab 4：待确认事项 -->
-        <div class="spec-tab-panel" id="spec-tab-4">
+        <!-- Tab 2：字段取值（基础字段：列 1-6 + 审计列 + 汇和零售溢价规则） -->
+        <div class="spec-tab-panel" id="spec-tab-2">
           <div class="spec-section">
-            <div class="spec-section-title">5. 待确认事项</div>
+            <div class="spec-section-title">4. 基础字段取值（列 1-6 + 审计列）</div>
 
             <table class="spec-table">
-              <thead><tr><th style="width:40px;">#</th><th>内容</th><th style="width:120px;">负责方</th></tr></thead>
+              <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
               <tbody>
-                <tr><td>Q1</td><td>历史月份是否允许重算？</td><td>财务</td></tr>
-                <tr><td>Q2</td><td>导出文件命名规则（如 <code>经营者收入报送表_202504.xlsx</code>）是否有合规格式要求？</td><td>财务</td></tr>
+                <tr><td>1</td><td>是否已取得登记证照</td><td>固定填 <code>是</code>。报送对象限定为「实名认证已通过 且 主体类型 ∈ {企业, 个体工商户}」，已具备登记证照。</td></tr>
+                <tr><td>2</td><td>名称（姓名）</td><td>取实名认证信息中的<strong>主体名称</strong>（企业全称 / 个体工商户名称），对应字段 <code>accountName</code>。</td></tr>
+                <tr><td>3</td><td>统一社会信用代码<br>（纳税人识别号）</td><td>取实名认证信息中的<strong>统一社会信用代码</strong>，对应字段 <code>creditCode</code>。旧称「组织机构代码」已统一并入此项。</td></tr>
+                <tr><td>4</td><td>收入来源的互联网平台名称</td><td>固定填 <code>唯普汽车</code>（平台运营主体名称，全表统一）。</td></tr>
+                <tr><td>5</td><td>收入来源的店铺<br>（用户）名称</td><td>同列 2，取 <code>accountName</code>。官方模板要求展示店铺/用户名称，与认证主体名称一致。</td></tr>
+                <tr><td>6</td><td>收入来源的店铺（用户）<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识。</td></tr>
+                <tr><td>*</td><td>卖家名称<br><span style="color:#d46b08;font-size:11px;">（平台内部审计列）</span></td><td><strong>取值逻辑</strong>：当主体身份为<strong>卖家</strong>时，取「<strong>门店全称</strong>」或「<strong>车主全称</strong>」——主体为门店则取门店全称，主体为车主则取车主姓名/全称；纯服务商身份此列为空。<br><span style="color:#874d00;font-size:11px;">用途：审计列，便于在 <code>accountName</code> 之外快速识别卖家真实主体。<strong>导出 Excel 时一并包含该列。</strong></span></td></tr>
+                <tr><td>*</td><td>角色<br><span style="color:#d46b08;font-size:11px;">（平台内部审计列）</span></td><td><strong>取值逻辑</strong>：根据主体在订单/衍生服务中的身份打标 —— <code>卖家</code> / <code>服务商</code> / <code>卖家+服务商</code>。<br><span style="color:#874d00;font-size:11px;">用途：审计列，便于快速识别 <code>userName</code> 对应主体的角色，校验列 7-12 取数是否正确。<strong>导出 Excel 时一并包含该列。</strong></span></td></tr>
               </tbody>
             </table>
+          </div>
 
+          <div class="spec-section">
+            <div class="spec-section-title">5. 汇和零售溢价 — 业务规则</div>
+            <p>因汇和垫款订单量少，统一按零售溢价计入服务商收入。</p>
+            <p><strong>来源</strong>：钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。</p>
+            <p><strong>影响范围</strong>：在「销售服务收入总额（列 10）」公式中作为加项纳入；在「销售货物收入（列 7）」三类场景中也涉及（详见 Tab ③）。</p>
+          </div>
+        </div>
+
+        <!-- Tab 3：收入·退款·交易笔数（列 7-13 + 销售货物收入三类取数场景） -->
+        <div class="spec-tab-panel" id="spec-tab-3">
+          <div class="spec-section">
+            <div class="spec-section-title">6. 收入·退款·交易笔数字段口径（列 7-13）</div>
+
+            <table class="spec-table">
+              <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
+              <tbody>
+                <tr><td>7</td><td>销售货物收入总额</td><td><strong>业务定义</strong>：卖家在统计周期内通过平台销售车辆所获得的收入（不含退款）。<br><strong>取数来源</strong>：FNC 钱包流水，按<strong>清算月份</strong>归集（跨月计入次月）。<br>因不同门店垫款方式不同，分 <strong>3 类场景</strong>取数，<span style="color:#1677ff;">详见下方「销售货物收入 · 三类取数场景」卡片</span>。</td></tr>
+                <tr><td>8</td><td>销售货物退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>卖家</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
+                <tr><td>9</td><td>销售货物收入净额</td><td><code>列 9 = 列 7 − 列 8</code>，生成时直接落库。</td></tr>
+                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算月份</strong>归集（跨月计入次月）。<br><span style="color:#cf1322;font-weight:600;">公式：服务商「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）+ 汇和零售溢价</span></td></tr>
+                <tr><td>11</td><td>销售服务退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>服务商</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
+                <tr><td>12</td><td>销售服务收入净额</td><td><code>列 12 = 列 10 − 列 11</code>，生成时直接落库。</td></tr>
+                <tr><td>13</td><td>交易（订单）数量</td><td><strong>提现订单数 − 退车订单数</strong>；模板只 1 列，同一 <code>userName</code> 的卖家+服务商订单合并填入。<br><span style="color:#874d00;font-size:11px;">同一订单分多次提现按 1 单计；卖家退车时服务商佣金也须退回，对应退车订单数同时计入服务商侧。</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">7. 销售货物收入 · 三类取数场景（列 7 详细口径）</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+              <div style="border:1px solid #e5e6eb;border-left:4px solid #1677ff;border-radius:4px;padding:12px 14px;background:#f6f9ff;font-size:12px;line-height:1.8;">
+                <div style="font-weight:600;color:#1677ff;margin-bottom:4px;">场景 1 · 非汇和垫款车辆 + 非门店自垫款车辆（按提现汇总）</div>
+                <div><strong>公式</strong>：销售收入 = 统计周期内「已提现已清算」流水汇总；<span style="color:#cf1322;font-weight:600;">合并提现中如包含负向流水（如售后佣金扣款），需剔除</span>。</div>
+                <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 湘AN172F</strong>（附图1）：一次提现 30,000 元，明细含 车款 <code>+34,800</code>、佣金 <code>−4,800</code>；<br>→ 销售收入 = <code>34,800</code>（剔除负向 <code>−4,800</code>）。</div>
+                <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
+                  <div class="spec-img-caption" style="font-size:11px;">📷 附图 1：湘 AN172F · 提现弹窗</div>
+                  <img src="附图1-湘AN172F-提现弹窗.png" alt="湘AN172F 提现弹窗" class="spec-img"
+                       onclick="zoomImg(this)"
+                       onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>附图1-湘AN172F-提现弹窗.png</code> 未找到。&lt;/div&gt;'">
+                </div>
+              </div>
+              <div style="border:1px solid #e5e6eb;border-left:4px solid #52c41a;border-radius:4px;padding:12px 14px;background:#f6ffed;font-size:12px;line-height:1.8;">
+                <div style="font-weight:600;color:#389e0d;margin-bottom:4px;">场景 2 · 门店使用「汇和垫款」</div>
+                <div><strong>公式</strong>：销售收入 = ① 汇和垫款户（摘要含「收回垫付车款」）的钱包流水 ＋ ② 汇和收益流水 − ③ SaaS 服务费 − ④ 零售溢价（摘要「衍生服务-零售溢价-结算」）。</div>
+                <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 粤QG2630</strong>（附图3）：<br>① 汇和垫款户 <code>+23,000</code>（收回垫付车款）<br>② 汇和收益 <code>+2,600</code>（车款·利润）<br>③ SaaS 服务费 <code>−600</code><br>④ 本单无零售溢价<br>→ 销售收入 = <code>23,000 + 2,600 − 600 = 25,000</code></div>
+                <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
+                  <div class="spec-img-caption" style="font-size:11px;">📷 附图 3：粤 QG2630 · 钱包流水</div>
+                  <img src="附图3-粤QG2630-钱包流水.png" alt="粤QG2630 钱包流水" class="spec-img"
+                       onclick="zoomImg(this)"
+                       onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>附图3-粤QG2630-钱包流水.png</code> 未找到。&lt;/div&gt;'">
+                </div>
+              </div>
+              <div style="border:1px solid #e5e6eb;border-left:4px solid #722ed1;border-radius:4px;padding:12px 14px;background:#f9f0ff;font-size:12px;line-height:1.8;">
+                <div style="font-weight:600;color:#531dab;margin-bottom:4px;">场景 3 · 门店自垫款（按钱包流水明细汇总）</div>
+                <div><strong>公式</strong>：销售收入 = 钱包流水摘要「收车款（成交价）」 ＋ 钱包流水「衍生服务-零售溢价-结算」。</div>
+                <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 粤A1H2Y4</strong>（附图2）：<br><code>+47,000</code>（收车款·成交价） ＋ 零售溢价金额<br>→ 销售收入 = <code>47,000 + 零售溢价</code></div>
+                <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
+                  <div class="spec-img-caption" style="font-size:11px;">📷 附图 2：粤 A1H2Y4 · 钱包流水</div>
+                  <img src="附图2-粤A1H2Y4-钱包流水.png" alt="粤A1H2Y4 钱包流水" class="spec-img"
+                       onclick="zoomImg(this)"
+                       onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>附图2-粤A1H2Y4-钱包流水.png</code> 未找到。&lt;/div&gt;'">
+                </div>
+              </div>
+              <div style="font-size:12px;color:#86909c;line-height:1.7;padding:4px 2px;">
+                💡 <strong>说明</strong>：三类场景按车辆的垫款方式互斥归类 —— 场景 1 覆盖既非汇和垫款也非门店自垫款的常规车辆；场景 2 仅对应汇和垫款；场景 3 仅对应门店自垫款。研发实现时按订单的垫款标记走对应公式即可，无需在场景间做去重。
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
+    </div>
     </div>
 
     <!-- ===== 报送表标题 ===== -->
@@ -397,6 +427,7 @@
             <th rowspan="3">收入来源的<br>互联网平台名称</th>
             <th rowspan="3">收入来源的<br>店铺（用户）名称</th>
             <th rowspan="3">收入来源的店铺<br>（用户）唯一标识码</th>
+            <th rowspan="3" class="role-col">卖家名称<span class="help-icon">?<span class="tooltip">平台内部审计列（非官方报送列）。取值逻辑：当主体为卖家时，取「门店全称」或「车主全称」；纯服务商行此列为空。导出 Excel 时一并包含该列。</span></span></th>
             <th rowspan="3" class="role-col">角色<span class="help-icon">?<span class="tooltip">平台内部审计列（非官方报送列），用于标识 userName 对应主体的角色。导出 Excel 时一并包含该列。</span></span></th>
             <th colspan="6">已取得登记证照的平台内经营者收入信息</th>
             <th rowspan="3">交易（订单）<br>数量（笔）</th>
@@ -424,6 +455,7 @@
             <th>5</th>
             <th>6</th>
             <th class="role-col">*</th>
+            <th class="role-col">*</th>
             <th>7</th>
             <th>8</th>
             <th>9 = 7−8</th>
@@ -441,138 +473,6 @@
 
 </main>
 </div>
-</div>
-
-<!-- ===== 字段取值说明弹窗 ===== -->
-<div class="modal-mask" id="spec-modal" onclick="closeSpec(event)">
-  <div class="modal-spec" onclick="event.stopPropagation()">
-    <div class="spec-header">
-      <div>
-        <h3>经营者与从业人员收入信息报送表 · 字段取值说明</h3>
-        <div class="spec-meta">列 1~13 的具体取数公式与口径，研发实现参考</div>
-      </div>
-      <span class="spec-close" onclick="document.getElementById('spec-modal').classList.remove('show')">✕</span>
-    </div>
-    <div class="spec-body">
-
-      <div class="spec-section">
-        <div class="spec-section-title">一、背景与目标</div>
-        <p>为满足《互联网平台企业涉税信息报送》合规要求，按月度对平台已实名认证的经营者收入数据进行汇总归档，供财务报送税局。报表需做到：完整覆盖、数据准确、版本归档（月度快照）、可按模板导出 Excel。</p>
-      </div>
-
-      <div class="spec-section">
-        <div class="spec-section-title">二、报送对象（经营者）</div>
-        <ul>
-          <li><strong>经营者</strong>：实名认证 = 已通过 且 认证主体类型 ∈ {企业, 个体工商户}的卖家（门店/车主，须为企业或个体）+ 服务商。</li>
-          <li><strong>卖家定义</strong>：订单表中，车款付款给到的用户 —— 可能是<strong>车主</strong>，也可能是<strong>门店</strong>。</li>
-          <li><strong>服务商定义</strong>（涵盖以下两类）：
-            <ol style="padding-left:22px;margin-top:4px;">
-              <li><strong>订单表中的"服务商"角色</strong>：撮合买卖双方交易的中间服务商（如订单详情页中的"服务商"账户，收取过户/服务佣金）。</li>
-              <li><strong>衍生服务订单 - 项目与服务商管理中的服务商</strong>：在第三方服务下挂载的合作商（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险等），<strong>须为已认证的企业或个体工商户</strong>。</li>
-            </ol>
-          </li>
-        </ul>
-
-        <div class="spec-img-block">
-          <div class="spec-img-caption">📷 示例 1：订单详情页 — 标注「<strong>卖方取值</strong>」与「<strong>服务商取值 1</strong>」</div>
-          <img src="图片示例1-订单详情.png" alt="订单详情中的卖方与服务商取值示例" class="spec-img"
-               onclick="zoomImg(this)"
-               onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>图片示例1-订单详情.png</code> 未找到，请将订单详情截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
-          <div class="spec-img-note">▸ 红框「车主/卖家」与「门店」对应清算款项接收方 = <strong>卖家取值</strong>（车款付款给到的账户）；<br>▸ 红框「服务商」（如截图中"广州市智茂汽车服务有限公司"）对应 = <strong>服务商取值 1</strong>。</div>
-        </div>
-
-        <div class="spec-img-block">
-          <div class="spec-img-caption">📷 示例 2：服务中心 → 衍生服务订单 → 项目与服务商管理 — <strong>服务商取值 2</strong></div>
-          <img src="服务商取值_2.png" alt="项目与服务商管理中的服务合作商" class="spec-img"
-               onclick="zoomImg(this)"
-               onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>服务商取值_2.png</code> 未找到，请将"项目与服务商管理"截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
-          <div class="spec-img-note">▸ 第三方服务下挂载的「<strong>服务合作商</strong>」（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险 等）= <strong>服务商取值 2</strong>，须为已认证的企业或个体工商户。</div>
-        </div>
-      </div>
-
-      <div class="spec-section">
-        <div class="spec-section-title">三、列 1~6 字段取值</div>
-        <table class="spec-table">
-          <thead><tr><th style="width:60px;">列</th><th style="width:200px;">字段</th><th>取值逻辑</th></tr></thead>
-          <tbody>
-            <tr><td>列 1</td><td>是否已取得登记证照</td><td>固定填 <code>是</code>。报送对象限定为「实名认证已通过 且 主体类型 ∈ {企业, 个体工商户}」，已具备登记证照。</td></tr>
-            <tr><td>列 2</td><td>名称（姓名）</td><td>取实名认证信息中的<strong>主体名称</strong>（企业全称 / 个体工商户名称），对应字段 <code>accountName</code>。</td></tr>
-            <tr><td>列 3</td><td>统一社会信用代码<br>（纳税人识别号）</td><td>取实名认证信息中的<strong>统一社会信用代码</strong>，对应字段 <code>creditCode</code>。旧称「组织机构代码」已统一并入此项。</td></tr>
-            <tr><td>列 4</td><td>收入来源的互联网平台名称</td><td>固定填 <code>唯普汽车</code>（平台运营主体名称，全表统一）。</td></tr>
-            <tr><td>列 5</td><td>收入来源的店铺（用户）名称</td><td>同列 2，取 <code>accountName</code>。官方模板要求展示店铺/用户名称，与认证主体名称一致。</td></tr>
-            <tr><td>列 6</td><td>收入来源的店铺（用户）<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识。</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="spec-section">
-        <div class="spec-section-title">四、列 7~12 金额口径</div>
-        <p><strong>4.1 收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按 <strong>清算月份</strong> 归集（跨月计入次月）。卖家流水 → 销售收入（列 7）；服务商流水 → 服务收入（列 10）。</p>
-        <p><strong>4.2 退款金额</strong>：按官方模板拆为两栏（列 8 / 列 11）。退款必须经仲裁产生，仲裁负数款项需从收入总额中剔除并归集到对应退款列。</p>
-        <table class="spec-table">
-          <thead><tr><th>口径</th><th>公式</th></tr></thead>
-          <tbody>
-            <tr><td>销售货物收入总额（列 7）</td><td>卖家「已提现已清算」流水汇总 − 卖家「提现仲裁负数款项」</td></tr>
-            <tr><td>销售货物退款金额（列 8）</td><td>卖家「提现仲裁负数款项」绝对值汇总</td></tr>
-            <tr><td>销售货物收入净额（列 9）</td><td><code>列9 = 列7 − 列8</code></td></tr>
-            <tr><td>销售服务收入总额（列 10）</td><td>服务商「已提现已清算」流水汇总 − 服务商「提现仲裁负数款项」（含汇和零售溢价）</td></tr>
-            <tr><td>销售服务退款金额（列 11）</td><td>服务商「提现仲裁负数款项」绝对值汇总</td></tr>
-            <tr><td>销售服务收入净额（列 12）</td><td><code>列12 = 列10 − 列11</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="spec-section">
-        <div class="spec-section-title">五、列 13 交易笔数</div>
-        <ul>
-          <li><strong>提现订单数</strong>：按提现任务清算完成时间归集；同一订单分多次提现按 1 单计。</li>
-          <li><strong>退车订单数</strong>：发生售后仲裁需要退车的订单数（卖家退车时，服务商佣金也需退回）。</li>
-          <li><strong>净订单数 = 提现订单数 − 退车订单数</strong>；模板只 1 列，同一 <code>userName</code> 卖家+服务商订单合并填入。</li>
-        </ul>
-      </div>
-
-      <div class="spec-section">
-        <div class="spec-section-title">六、汇和零售溢价</div>
-        <p>因汇和垫款订单量少，<strong>统一按零售溢价计入服务商收入</strong>。来源：钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。</p>
-      </div>
-
-      <div class="spec-section">
-        <div class="spec-section-title">七、生成机制与展示</div>
-        <ul>
-          <li><strong>频率与时机</strong>：每月 1 日 00:00 自动触发，覆盖上一个自然月的清算/订单数据。</li>
-          <li><strong>版本归档</strong>：生成即锁定快照，事后流水变动不影响已生成期间的数据（物化到归档表）。</li>
-          <li><strong>列表功能</strong>：月份筛选（默认当前月-1）+ 经营者搜索（<code>accountName</code> / <code>userName</code> / 统一社会信用代码 模糊匹配）+ 分页。</li>
-          <li><strong>导出</strong>：Excel，带合并表头，导出当前筛选条件下全部数据（不分页）。</li>
-        </ul>
-      </div>
-
-      <div class="spec-section">
-        <div class="spec-section-title">八、其他说明</div>
-        <ul>
-          <li><strong>零流水经营者</strong>：已认证但当月零流水的，仍输出一行，金额/笔数全部填 0。</li>
-        </ul>
-      </div>
-
-      <div class="spec-section">
-        <div class="spec-section-title">九、待确认事项</div>
-        <table class="spec-table">
-          <thead><tr><th style="width:40px;">#</th><th>内容</th><th style="width:120px;">负责方</th></tr></thead>
-          <tbody>
-            <tr><td>Q1</td><td>历史月份是否允许重算？</td><td>财务</td></tr>
-            <tr><td>Q2</td><td>导出文件命名规则（如 <code>经营者收入报送表_202504.xlsx</code>）是否有合规格式要求</td><td>财务</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="spec-tip">
-        💡 完整需求文档见仓库根目录：<code>需求文档-经营者收入报送表.md</code>。本弹窗为快速参考，以最终定稿文档为准。
-      </div>
-
-    </div>
-    <div class="spec-footer">
-      <button class="btn btn-primary" onclick="document.getElementById('spec-modal').classList.remove('show')">我知道了</button>
-    </div>
-  </div>
 </div>
 
 <!-- ===== 图片放大遮罩 ===== -->
@@ -753,7 +653,7 @@ function render() {
   tbody.innerHTML = '';
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="15" style="text-align:center;color:#8c8c8c;padding:48px 0;">当月暂无数据</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="16" style="text-align:center;color:#8c8c8c;padding:48px 0;">当月暂无数据</td></tr>`;
   } else {
     pagedRows.forEach((item, idx) => {
       const r = getRow(item, currentMode);
@@ -772,6 +672,7 @@ function render() {
         <td>${PLATFORM_NAME}</td>
         <td class="text-left">${item.accountName}</td>
         <td>${item.userName}</td>
+        <td class="role-col text-left">${r.role === '服务商' ? '—' : item.accountName}</td>
         <td class="role-col">${roleTag}</td>
         <td class="num">${fmtMoney(r.goods)}</td>
         <td class="num">${fmtMoney(r.goodsRefund)}</td>
@@ -913,12 +814,8 @@ function closeModal(e) {
   if (e.target.id === 'modal') document.getElementById('modal').classList.remove('show');
 }
 
-function showSpec() {
-  document.getElementById('spec-modal').classList.add('show');
-}
-
 function toggleSpec() {
-  document.getElementById('spec-panel').classList.toggle('show');
+  document.getElementById('spec-modal-mask').classList.toggle('show');
 }
 
 function switchSpecTab(n) {
@@ -930,12 +827,8 @@ function switchSpecTab(n) {
   });
 }
 
-function showValues() {
-  document.getElementById('spec-modal').classList.add('show');
-}
-
 function closeSpec(e) {
-  if (e.target.id === 'spec-modal') document.getElementById('spec-modal').classList.remove('show');
+  if (e.target.id === 'spec-modal-mask') document.getElementById('spec-modal-mask').classList.remove('show');
 }
 
 function zoomImg(imgEl) {
@@ -966,6 +859,7 @@ function doExport() {
         <th rowspan="3">收入来源的互联网平台名称</th>
         <th rowspan="3">收入来源的店铺（用户）名称</th>
         <th rowspan="3">收入来源的店铺（用户）唯一标识码</th>
+        <th rowspan="3">卖家名称</th>
         <th rowspan="3">角色</th>
         <th colspan="6">已取得登记证照的平台内经营者收入信息</th>
         <th rowspan="3">交易（订单）数量（笔）</th>
@@ -990,6 +884,7 @@ function doExport() {
       <td>${idx + 1}</td><td>是</td>
       <td>${item.accountName}</td><td>${item.creditCode}</td>
       <td>${PLATFORM_NAME}</td><td>${item.accountName}</td><td>${item.userName}</td>
+      <td>${r.role === '服务商' ? '' : item.accountName}</td>
       <td>${r.role}</td>
       <td class="num">${fmtMoney(r.goods)}</td><td class="num">${fmtMoney(r.goodsRefund)}</td><td class="num">${fmtMoney(goodsNet)}</td>
       <td class="num">${fmtMoney(r.service)}</td><td class="num">${fmtMoney(r.serviceRefund)}</td><td class="num">${fmtMoney(serviceNet)}</td>
