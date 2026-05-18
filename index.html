@@ -24,10 +24,18 @@
   /* ===== 侧边栏 ===== */
   .sidebar { width: 180px; background: #2c3e50; color: #c9d1d9; flex-shrink: 0; padding-top: 8px; }
   .sidebar .menu-parent { padding: 14px 20px; color: #fff; font-size: 14px; display: flex; justify-content: space-between; align-items: center; background: #34495e; cursor: pointer; }
-  .sidebar .menu-parent .arrow { font-size: 12px; color: #c9d1d9; transform: rotate(180deg); transition: transform 0.2s; }
+  .sidebar .menu-parent .arrow { font-size: 12px; color: #c9d1d9; transform: rotate(90deg); transition: transform 0.2s; }
   .sidebar .menu-item { padding: 12px 20px 12px 32px; font-size: 13px; color: #c9d1d9; cursor: pointer; }
   .sidebar .menu-item:hover { background: #34495e; color: #fff; }
   .sidebar .menu-item.active { background: #1677ff; color: #fff; }
+  .sidebar .menu-tag { display: inline-block; margin-left: 6px; padding: 1px 5px; background: #fa8c16; color: #fff; font-size: 9px; border-radius: 2px; transform: scale(0.9); vertical-align: middle; letter-spacing: 0.5px; }
+  .user-table { min-width: 1300px !important; }
+  .user-table th.col-new { background: #fff7e6 !important; color: #d46b08 !important; }
+  .user-table th, .user-table td { padding: 10px 12px; font-size: 12px; }
+  .user-table tbody td { text-align: center; }
+  .user-table tbody td.text-left { text-align: left; }
+  .user-table tbody td.col-new { background: #fffbe6; color: #d46b08; font-weight: 500; }
+  .user-table .link { color: #1677ff; cursor: pointer; }
 
   /* ===== 顶部面包屑栏 ===== */
   .header-bar { background: #fff; border-bottom: 1px solid #f0f0f0; padding: 12px 24px; display: flex; align-items: center; gap: 12px; font-size: 13px; }
@@ -69,6 +77,20 @@
     100% { box-shadow: 0 0 0 0 rgba(250,84,28,0); }
   }
   .filter-bar .right { margin-left: auto; display: flex; gap: 8px; }
+  /* ===== 用户列表多行筛选条 ===== */
+  .ul-filter { flex-direction: column; align-items: stretch; gap: 12px; }
+  .ul-filter .fb-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .ul-filter .fb-field { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4e5969; }
+  .ul-filter .fb-field label { min-width: 72px; text-align: right; color: #4e5969; }
+  .ul-filter .fb-field input, .ul-filter .fb-field select { min-width: 0; padding: 6px 10px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 13px; }
+  .ul-filter .fb-field select { min-width: 180px; }
+  .ul-filter .fb-sep { color: #86909c; }
+  .ul-filter .fb-num { width: 88px; }
+  .ul-filter .fb-advanced { display: flex; flex-direction: column; gap: 12px; }
+  .btn-link { background: transparent; border: none; color: #1677ff; cursor: pointer; font-size: 13px; padding: 4px 6px; }
+  .btn-link:hover { color: #4096ff; text-decoration: underline; }
+  .btn-link .arr { font-size: 10px; margin-left: 2px; }
+  .tab-nav .tab-action { margin-left: auto; display: flex; align-items: center; gap: 8px; padding-right: 18px; }
 
   /* ===== 数据汇总卡片 ===== */
   .summary-bar { background: #fff; border: 1px solid #e5e6eb; border-radius: 4px; padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -196,10 +218,15 @@
 <!-- ===== 侧边栏 ===== -->
 <aside class="sidebar">
   <div class="menu-parent">
+    <span>业务数据</span>
+    <span class="arrow">›</span>
+  </div>
+  <div class="menu-item" data-view="user-list" onclick="switchView('user-list')">用户列表 <span class="menu-tag">调整</span></div>
+  <div class="menu-parent">
     <span>财务管理</span>
     <span class="arrow">›</span>
   </div>
-  <div class="menu-item active">报表管理</div>
+  <div class="menu-item active" data-view="report" onclick="switchView('report')">报表管理 <span class="menu-tag">调整</span></div>
 </aside>
 
 <div class="content">
@@ -209,11 +236,16 @@
   <span class="home-icon">⌂</span>
   <span class="crumb">首页</span>
   <span class="crumb-sep">/</span>
-  <span class="home-icon">●</span>
-  <span class="crumb">财务管理</span>
-  <span class="crumb-sep">/</span>
-  <span class="crumb current">报表管理</span>
+  <span id="breadcrumb-trail">
+    <span class="home-icon">●</span>
+    <span class="crumb">财务管理</span>
+    <span class="crumb-sep">/</span>
+    <span class="crumb current">报表管理</span>
+  </span>
 </div>
+
+<!-- ===== 视图：经营者收入报送表 ===== -->
+<div class="view" id="view-report">
 
 <!-- ===== Tab 横向导航 ===== -->
 <div class="tab-nav">
@@ -233,12 +265,12 @@
 <main class="main">
     <!-- ===== 筛选条 ===== -->
     <div class="filter-bar">
-      <label>报表月份：</label>
+      <label>报表季度：</label>
       <select id="month-select" onchange="currentPage=1;render()">
-        <option value="2026-04">2026-04</option>
-        <option value="2026-03">2026-03</option>
-        <option value="2026-02">2026-02</option>
-        <option value="2026-01">2026-01</option>
+        <option value="2026-Q1">2026 Q1（2026-01 ~ 2026-03）</option>
+        <option value="2025-Q4">2025 Q4（2025-10 ~ 2025-12）</option>
+        <option value="2025-Q3">2025 Q3（2025-07 ~ 2025-09）</option>
+        <option value="2025-Q2">2025 Q2（2025-04 ~ 2025-06）</option>
       </select>
       <label>经营者搜索：</label>
       <input id="search-input" type="text" placeholder="名称/用户名/统一社会信用代码" style="min-width: 320px;" oninput="currentPage=1;render()" onkeydown="if(event.key==='Enter'){currentPage=1;render();}">
@@ -266,7 +298,8 @@
       <div class="spec-tabs">
         <div class="spec-tab active" data-tab="1" onclick="switchSpecTab(1)">① 背景·范围·生成机制</div>
         <div class="spec-tab" data-tab="2" onclick="switchSpecTab(2)">② 字段取值（基础字段）</div>
-        <div class="spec-tab" data-tab="3" onclick="switchSpecTab(3)">③ 字段取值（收入·退款·交易笔数）</div>
+        <div class="spec-tab" data-tab="3" onclick="switchSpecTab(3)">③ 销售收入退款交易笔数</div>
+        <div class="spec-tab" data-tab="4" onclick="switchSpecTab(4)">④ 服务收入退款交易笔数</div>
       </div>
 
       <div class="spec-panel-body">
@@ -274,7 +307,7 @@
         <div class="spec-tab-panel active" id="spec-tab-1">
           <div class="spec-section">
             <div class="spec-section-title">1. 背景与目标</div>
-            <p>为满足《互联网平台企业涉税信息报送》合规要求，按月度对平台已实名认证的经营者收入数据进行汇总归档，供财务报送税局。报表需做到：完整覆盖、数据准确、版本归档（月度快照）、可按模板导出 Excel。</p>
+            <p>为满足《互联网平台企业涉税信息报送》合规要求，<strong>按季度</strong>对平台已实名认证的经营者收入数据进行汇总归档，供财务报送税局。报表需做到：完整覆盖、数据准确、版本归档（季度快照）、可按模板导出 Excel。</p>
           </div>
 
           <div class="spec-section">
@@ -288,7 +321,7 @@
                   <li><strong>衍生服务订单 - 项目与服务商管理中的服务商</strong>：在第三方服务下挂载的合作商（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险等），<strong>须为已认证的企业或个体工商户</strong>。</li>
                 </ol>
               </li>
-              <li><strong>零流水经营者</strong>：已认证但当月零流水的，仍输出一行，金额/笔数全部填 0。</li>
+              <li><strong>零流水经营者</strong>：已认证但当季度零流水的，仍输出一行，金额/笔数全部填 0。</li>
             </ul>
 
             <div class="spec-img-block">
@@ -311,9 +344,10 @@
           <div class="spec-section">
             <div class="spec-section-title">3. 生成机制与展示</div>
             <ul>
-              <li><strong>频率与时机</strong>：每月 1 日 00:00 自动触发，生成上个自然月的数据。</li>
-              <li><strong>版本归档</strong>：生成即锁定快照，事后流水变动不影响已生成期间的数据（物化到归档表）。</li>
-              <li><strong>列表功能</strong>：月份筛选（默认当前月-1）+ 经营者搜索（<code>accountName</code> / <code>userName</code> / 统一社会信用代码 模糊匹配）+ 分页（10/20/50/100 条/页）。</li>
+              <li><strong>频率与时机</strong>：每季度首月 1 日 00:00（即 4/1、7/1、10/1、1/1）自动触发，生成上一个自然季度的数据。</li>
+              <li><strong>初始化</strong>：<span style="color:#cf1322;font-weight:600;">功能上线后，需初始化 2026 年 1-3 月（2026 Q1）的数据</span>，作为首期报表数据。</li>
+              <li><strong>版本归档</strong>：生成即锁定快照，事后流水变动不影响已生成期间的数据。</li>
+              <li><strong>列表功能</strong>：季度筛选（默认当前已生成的最新季度）+ 经营者搜索（<code>accountName</code> / <code>userName</code> / 统一社会信用代码 模糊匹配）+ 分页（10/20/50/100 条/页）。</li>
               <li><strong>导出</strong>：Excel，带合并表头，导出当前筛选条件下全部数据（不分页）。</li>
             </ul>
           </div>
@@ -328,40 +362,36 @@
               <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
               <tbody>
                 <tr><td>1</td><td>是否已取得登记证照</td><td>固定填 <code>是</code>。报送对象限定为「实名认证已通过 且 主体类型 ∈ {企业, 个体工商户}」，已具备登记证照。</td></tr>
-                <tr><td>2</td><td>名称（姓名）</td><td>取实名认证信息中的<strong>主体名称</strong>（企业全称 / 个体工商户名称），对应字段 <code>accountName</code>。</td></tr>
+                <tr><td>2</td><td>名称（姓名）</td><td>取实名认证信息中的<strong>主体名称</strong>（企业全称 / 个体工商户名称），对应字段「开户名」<code>accountName</code>。</td></tr>
                 <tr><td>3</td><td>统一社会信用代码<br>（纳税人识别号）</td><td>取实名认证信息中的<strong>统一社会信用代码</strong>，对应字段 <code>creditCode</code>。旧称「组织机构代码」已统一并入此项。</td></tr>
                 <tr><td>4</td><td>收入来源的互联网平台名称</td><td>固定填 <code>唯普汽车</code>（平台运营主体名称，全表统一）。</td></tr>
-                <tr><td>5</td><td>收入来源的店铺<br>（用户）名称</td><td style="color:#f53f3f;font-weight:500;">待财务与税局确认</td></tr>
-                <tr><td>6</td><td>收入来源的店铺（用户）<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识。</td></tr>
-                <tr><td>*</td><td>卖家名称<br><span style="color:#d46b08;font-size:11px;">（平台内部审计列）</span></td><td><strong>取值逻辑</strong>：当主体身份为<strong>卖家</strong>时，取「<strong>门店全称</strong>」或「<strong>车主全称</strong>」——主体为门店则取门店全称，主体为车主则取车主姓名/全称；纯服务商身份此列为空。<br><span style="color:#874d00;font-size:11px;">用途：审计列，便于在 <code>accountName</code> 之外快速识别卖家真实主体。<strong>导出 Excel 时一并包含该列。</strong></span></td></tr>
+                <tr><td>5</td><td>收入来源的店铺<br>（用户）名称</td><td>取「<strong>用户列表 · 姓名</strong>」字段，对应 <code>trueName</code>。</td></tr>
+                <tr><td>6</td><td>收入来源的店铺（用户)<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识。</td></tr>
                 <tr><td>*</td><td>角色<br><span style="color:#d46b08;font-size:11px;">（平台内部审计列）</span></td><td><strong>取值逻辑</strong>：根据主体在订单/衍生服务中的身份打标 —— <code>卖家</code> / <code>服务商</code> / <code>卖家+服务商</code>。<br><span style="color:#874d00;font-size:11px;">用途：审计列，便于快速识别 <code>userName</code> 对应主体的角色，校验列 7-12 取数是否正确。<strong>导出 Excel 时一并包含该列。</strong></span></td></tr>
               </tbody>
             </table>
           </div>
 
-          <div class="spec-section">
-            <div class="spec-section-title">5. 汇和零售溢价 — 业务规则</div>
-            <p>因汇和垫款订单量少，统一按零售溢价计入服务商收入。</p>
-            <p><strong>来源</strong>：钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。</p>
-            <p><strong>影响范围</strong>：在「销售服务收入总额（列 10）」公式中作为加项纳入；在「销售货物收入（列 7）」三类场景中也涉及（详见 Tab ③）。</p>
-          </div>
         </div>
 
-        <!-- Tab 3：收入·退款·交易笔数（列 7-13 + 销售货物收入三类取数场景） -->
+        <!-- Tab 3：销售收入退款交易笔数（列 7-9 + 销售货物收入三类取数场景） -->
         <div class="spec-tab-panel" id="spec-tab-3">
           <div class="spec-section">
-            <div class="spec-section-title">6. 收入·退款·交易笔数字段口径（列 7-13）</div>
+            <div class="spec-section-title">5. 销售收入定义</div>
+            <div style="padding:10px 12px;background:#f6f9ff;border-left:3px solid #1677ff;font-size:12px;line-height:1.8;">
+              <p style="margin:0;"><strong>销售收入 = 收车款</strong>（卖家通过平台销售车辆所获得的车款收入）。</p>
+              <p style="margin:6px 0 0;">📌 <strong>门店自垫款场景的销售收入包含零售溢价</strong>（详见下方「销售货物收入 · 三类取数场景」中的场景 3）。</p>
+            </div>
+          </div>
 
+          <div class="spec-section">
+            <div class="spec-section-title">6. 销售收入字段口径（列 7-9）</div>
             <table class="spec-table">
               <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
               <tbody>
-                <tr><td>7</td><td>销售货物收入总额</td><td><strong>业务定义</strong>：卖家在统计周期内通过平台销售车辆所获得的收入（不含退款）。<br><strong>取数来源</strong>：FNC 钱包流水，按<strong>清算月份</strong>归集（跨月计入次月）。<br>因不同门店垫款方式不同，分 <strong>3 类场景</strong>取数，<span style="color:#1677ff;">详见下方「销售货物收入 · 三类取数场景」卡片</span>。</td></tr>
+                <tr><td>7</td><td>销售货物收入总额</td><td><strong>业务定义</strong>：卖家在统计周期内通过平台销售车辆所获得的收入（不含退款）。<br><strong>取数来源</strong>：FNC 钱包流水，按<strong>清算季度</strong>归集（跨季计入次季度）。<br>分 <strong>3 类场景</strong>取数，<span style="color:#1677ff;">详见下方「销售货物收入 · 三类取数场景」卡片</span>。</td></tr>
                 <tr><td>8</td><td>销售货物退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>卖家</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
                 <tr><td>9</td><td>销售货物收入净额</td><td><code>列 9 = 列 7 − 列 8</code>，生成时直接落库。</td></tr>
-                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算月份</strong>归集（跨月计入次月）。<br><span style="color:#cf1322;font-weight:600;">公式：服务商「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）+ 汇和零售溢价</span></td></tr>
-                <tr><td>11</td><td>销售服务退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>服务商</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
-                <tr><td>12</td><td>销售服务收入净额</td><td><code>列 12 = 列 10 − 列 11</code>，生成时直接落库。</td></tr>
-                <tr><td>13</td><td>交易（订单）数量</td><td><strong>提现订单数 − 退车订单数</strong>；模板只 1 列，同一 <code>userName</code> 的卖家+服务商订单合并填入。<br><span style="color:#874d00;font-size:11px;">同一订单分多次提现按 1 单计；卖家退车时服务商佣金也须退回，对应退车订单数同时计入服务商侧。</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -371,8 +401,8 @@
             <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
               <div style="border:1px solid #e5e6eb;border-left:4px solid #1677ff;border-radius:4px;padding:12px 14px;background:#f6f9ff;font-size:12px;line-height:1.8;">
                 <div style="font-weight:600;color:#1677ff;margin-bottom:4px;">场景 1 · 非汇和垫款车辆 + 非门店自垫款车辆（按提现汇总）</div>
-                <div><strong>公式</strong>：销售收入 = 统计周期内「已提现已清算」流水汇总；<span style="color:#cf1322;font-weight:600;">合并提现中如包含负向流水（如售后佣金扣款），需剔除</span>。</div>
-                <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 湘AN172F</strong>（附图1）：一次提现 30,000 元，明细含 车款 <code>+34,800</code>、佣金 <code>−4,800</code>；<br>→ 销售收入 = <code>34,800</code>（剔除负向 <code>−4,800</code>）。</div>
+                <div><strong>公式</strong>：销售收入 = 统计周期内「已提现已清算」流水汇总；<span style="color:#cf1322;font-weight:600;">合并提现中如包含负向流水（如售后扣款），需剔除</span>。</div>
+                <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 湘AN172F</strong>（附图1）：一次提现 30,000 元，明细含 车款 <code>+34,800</code>、售后扣款 <code>−4,800</code>；<br>→ 销售收入 = <code>34,800</code>（剔除负向 <code>−4,800</code>）。</div>
                 <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
                   <div class="spec-img-caption" style="font-size:11px;">📷 附图 1：湘 AN172F · 提现弹窗</div>
                   <img src="附图1-湘AN172F-提现弹窗.png" alt="湘AN172F 提现弹窗" class="spec-img"
@@ -409,6 +439,34 @@
           </div>
         </div>
 
+        <!-- Tab 4：服务收入退款交易笔数（列 10-13 + 汇和零售溢价业务规则） -->
+        <div class="spec-tab-panel" id="spec-tab-4">
+          <div class="spec-section">
+            <div class="spec-section-title">8. 服务收入定义</div>
+            <div style="padding:10px 12px;background:#f6ffed;border-left:3px solid #52c41a;font-size:12px;line-height:1.8;">
+              <p style="margin:0;"><strong>服务收入 = ① 汇和收益的「衍生服务-零售溢价」 + ② 衍生服务商的收入</strong>。</p>
+              <ul style="padding-left:22px;margin:6px 0 0;">
+                <li><strong>汇和零售溢价</strong>：汇和收益钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。</li>
+                <li><strong>衍生服务商收入</strong>：撮合佣金、年检/提档/过户代办、铁牌费、改装修复、维修、保险等第三方服务商在平台获得的服务费收入。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="spec-section">
+            <div class="spec-section-title">9. 服务收入字段口径（列 10-13）</div>
+            <table class="spec-table">
+              <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
+              <tbody>
+                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算季度</strong>归集（跨季计入次季度）。<br><span style="color:#cf1322;font-weight:600;">公式：服务商「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）+ 汇和零售溢价</span></td></tr>
+                <tr><td>11</td><td>销售服务退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>服务商</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
+                <tr><td>12</td><td>销售服务收入净额</td><td><code>列 12 = 列 10 − 列 11</code>，生成时直接落库。</td></tr>
+                <tr><td>13</td><td>交易（订单）数量</td><td><strong>提现订单数 − 退车订单数</strong>；模板只 1 列，同一 <code>userName</code> 的卖家+服务商订单合并填入。<br><span style="color:#874d00;font-size:11px;">同一订单分多次提现按 1 单计；卖家退车时服务商佣金也须退回，对应退车订单数同时计入服务商侧。</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
       </div>
     </div>
     </div>
@@ -427,7 +485,6 @@
             <th rowspan="3">收入来源的<br>互联网平台名称</th>
             <th rowspan="3">收入来源的<br>店铺（用户）名称</th>
             <th rowspan="3">收入来源的店铺<br>（用户）唯一标识码</th>
-            <th rowspan="3" class="role-col">卖家名称<span class="help-icon">?<span class="tooltip">平台内部审计列（非官方报送列）。取值逻辑：当主体为卖家时，取「门店全称」或「车主全称」；纯服务商行此列为空。导出 Excel 时一并包含该列。</span></span></th>
             <th rowspan="3" class="role-col">角色<span class="help-icon">?<span class="tooltip">平台内部审计列（非官方报送列），用于标识 userName 对应主体的角色。导出 Excel 时一并包含该列。</span></span></th>
             <th colspan="6">已取得登记证照的平台内经营者收入信息</th>
             <th rowspan="3">交易（订单）<br>数量（笔）</th>
@@ -455,7 +512,6 @@
             <th>5</th>
             <th>6</th>
             <th class="role-col">*</th>
-            <th class="role-col">*</th>
             <th>7</th>
             <th>8</th>
             <th>9 = 7−8</th>
@@ -472,8 +528,189 @@
     <div class="pagination" id="pagination"></div>
 
 </main>
+</div><!-- /view-report -->
+
+<!-- ===== 视图：业务数据 - 用户列表 ===== -->
+<div class="view" id="view-user-list" style="display:none;">
+
+<!-- 用户列表 Tab -->
+<div class="tab-nav">
+  <div class="tab-item active">用户列表</div>
+  <div class="tab-action">
+    <button class="btn btn-spec" onclick="toggleUserSpec()">需求说明</button>
+  </div>
 </div>
-</div>
+
+<main class="main">
+  <!-- 筛选条（前 3 行默认折叠，点击「展开筛选」展开） -->
+  <div class="filter-bar ul-filter">
+    <div id="ul-filter-advanced" class="fb-advanced" style="display:none;">
+      <div class="fb-row">
+        <div class="fb-field"><label>用户</label>
+          <input id="ul-search" type="text" placeholder="请输入登录名/姓名/电话/身份证/银行卡号/门店名称" style="width:340px;" onkeydown="if(event.key==='Enter'){ulPage=1;renderUserList();}"></div>
+        <div class="fb-field"><label>银行子帐号</label>
+          <input id="ul-bank-sub" type="text" placeholder="请输入银行子帐号" style="width:200px;"></div>
+        <div class="fb-field"><label>认证</label>
+          <select id="ul-auth-status">
+            <option value="">请选择</option>
+            <option value="已认证">已认证</option>
+            <option value="审核中">审核中</option>
+            <option value="未认证">未认证</option>
+            <option value="已驳回">已驳回</option>
+          </select></div>
+      </div>
+
+      <div class="fb-row">
+        <div class="fb-field"><label>账户性质</label>
+          <select id="ul-type">
+            <option value="">请选择</option>
+            <option value="个人">个人</option>
+            <option value="企业">企业</option>
+            <option value="个体工商户">个体工商户</option>
+          </select></div>
+        <div class="fb-field"><label>注册时间</label>
+          <input id="ul-reg-start" type="date" style="width:150px;">
+          <span class="fb-sep">-</span>
+          <input id="ul-reg-end" type="date" style="width:150px;"></div>
+        <div class="fb-field"><label>认证时间</label>
+          <input id="ul-auth-start" type="date" style="width:150px;">
+          <span class="fb-sep">-</span>
+          <input id="ul-auth-end" type="date" style="width:150px;"></div>
+        <div class="fb-field"><label>来源</label>
+          <select id="ul-source">
+            <option value="">请输入来源</option>
+            <option value="新后台">新后台</option>
+            <option value="智慧市场">智慧市场</option>
+            <option value="M_SAAS">M_SAAS</option>
+            <option value="零售展厅">零售展厅</option>
+          </select></div>
+      </div>
+
+      <div class="fb-row">
+        <div class="fb-field"><label>用户标签</label>
+          <select id="ul-tag">
+            <option value="">请选择</option>
+            <option value="VIP">VIP</option>
+            <option value="重点客户">重点客户</option>
+            <option value="黑名单">黑名单</option>
+          </select></div>
+        <div class="fb-field"><label>银行总额</label>
+          <input type="number" class="fb-num"><span class="fb-sep">到</span><input type="number" class="fb-num"></div>
+        <div class="fb-field"><label>保证金</label>
+          <input type="number" class="fb-num"><span class="fb-sep">到</span><input type="number" class="fb-num"></div>
+        <div class="fb-field"><label>可用余额</label>
+          <input type="number" class="fb-num"><span class="fb-sep">到</span><input type="number" class="fb-num"></div>
+        <div class="fb-field"><label>手机归属地</label>
+          <select id="ul-mobile-area">
+            <option value="">请选择</option>
+            <option value="广东">广东</option>
+            <option value="上海">上海</option>
+            <option value="四川">四川</option>
+            <option value="江苏">江苏</option>
+            <option value="安徽">安徽</option>
+          </select></div>
+      </div>
+    </div>
+
+    <div class="fb-row">
+      <div class="fb-field"><label>智慧市场用户</label>
+        <select id="ul-is-smart">
+          <option value="">请选择</option>
+          <option value="是">是</option>
+          <option value="否">否</option>
+        </select></div>
+      <button class="btn btn-primary" onclick="ulPage=1;renderUserList()">搜索</button>
+      <button class="btn" onclick="exportUserList()">导出</button>
+      <button class="btn">新增</button>
+      <div class="right">
+        <button id="ul-filter-toggle" class="btn-link" onclick="toggleUlFilter()">展开筛选 <span class="arr">▼</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 需求说明弹框 -->
+  <div class="modal-mask" id="ul-spec-modal-mask" onclick="closeUserSpec(event)">
+    <div class="spec-panel" onclick="event.stopPropagation()">
+      <div class="spec-panel-header">
+        <div>
+          <h3>用户列表 · 字段扩展需求说明</h3>
+        </div>
+        <span class="spec-panel-close" onclick="toggleUserSpec()">✕</span>
+      </div>
+      <div class="spec-panel-body">
+        <div class="spec-section">
+          <div class="spec-section-title">1. 背景</div>
+          <p>为支撑《经营者与从业人员收入信息报送表》的季度报送与核对，需在用户列表中直接看到认证主体相关字段，并在导出时附带财务人工核对所需的联系人、地址信息。本需求只改造既有用户列表。</p>
+        </div>
+
+        <div class="spec-section">
+          <div class="spec-section-title">2. 列表展示列（新增 2 列）</div>
+          <table class="spec-table">
+            <thead><tr><th style="width:120px;">列名</th><th>取值规则</th><th style="width:200px;">位置</th></tr></thead>
+            <tbody>
+              <tr><td><strong>认证类型</strong></td><td>取实名认证主体类型，枚举：<code>个人</code> / <code>企业</code> / <code>个体工商户</code>；<strong>未认证用户展示为 <code>-</code></strong></td><td rowspan="2">「电话」之后、「来源」之前</td></tr>
+              <tr><td><strong>统一代码</strong></td><td>取「统一社会信用代码」或「组织机构代码」（即纳税人识别号），对应字段 <code>creditCode</code>；若证件类型不是统一代码或组代，展示为 <code>-</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="spec-section">
+          <div class="spec-section-title">3. 导出表格（在现有基础上新增 4 列）</div>
+          <table class="spec-table">
+            <thead><tr><th style="width:120px;">列名</th><th>取值规则</th></tr></thead>
+            <tbody>
+              <tr><td>认证类型</td><td>同列表展示</td></tr>
+              <tr><td>统一代码</td><td>同列表展示</td></tr>
+              <tr><td><strong>联系人</strong></td><td>取用户表「<code>经办人姓名</code>」；无值取「<code>法人姓名</code>」；仍无值取「<code>用户列表 · 姓名</code>」字段</td></tr>
+              <tr><td><strong>公司地址</strong></td><td>优先取「营业执照地址」；如无则取「门店信息 · 门店地址」；两者均无则留空（人工补录）</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="spec-section">
+          <div class="spec-section-title">4. 字段口径说明</div>
+          <ol style="padding-left:22px;line-height:1.9;">
+            <li><strong>认证类型</strong>：个人 / 企业 / 个体工商户；未认证用户展示为 <code>-</code>。</li>
+            <li><strong>统一代码</strong>：统一社会信用代码和组织机构代码（即纳税人识别号）；如证件类型不是统一代码或组代，展示为 <code>-</code>。</li>
+            <li><strong>联系人</strong>：取用户表「经办人姓名」，有值即取；无值取「法人姓名」；两者均无值则取「用户列表 · 姓名」字段。</li>
+            <li><strong>公司地址</strong>：优先取「营业执照地址」，如无取门店信息里的「门店地址」；如都无则为空，人工补录。</li>
+          </ol>
+          <div style="margin-top:10px;padding:10px 12px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;font-size:12px;line-height:1.7;">
+            💡 <strong>联系人、公司地址</strong>仅作为财务/税局沟通时的其他报表上送字段，由财务人员人工整理。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户列表表格 -->
+  <div class="table-wrap">
+    <table class="report-table user-table">
+      <thead>
+        <tr>
+          <th>用户名</th>
+          <th>姓名</th>
+          <th>电话</th>
+          <th class="col-new">认证类型</th>
+          <th class="col-new">统一代码</th>
+          <th>来源</th>
+          <th>注册日期</th>
+          <th>可用余额 (元)</th>
+          <th>待确认收款 (元)</th>
+          <th>保证金 (元)</th>
+          <th>总金额 (元)</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="ul-table-body"></tbody>
+    </table>
+  </div>
+
+  <div class="pagination" id="ul-pagination"></div>
+</main>
+</div><!-- /view-user-list -->
+</div><!-- /.content -->
+</div><!-- /.layout -->
 
 <!-- ===== 图片放大遮罩 ===== -->
 <div class="img-zoom-mask" id="img-zoom-mask" onclick="this.classList.remove('show')">
@@ -484,7 +721,7 @@
 <div class="modal-mask" id="modal" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <h3>导出确认</h3>
-    <p>将按上方筛选条件导出 <strong id="export-month">2026-04</strong> 报送表 Excel 文件，含合并表头，文件名格式：<code id="export-filename">经营者收入报送表_202604.xls</code></p>
+    <p>将按上方筛选条件导出 <strong id="export-month">2026 Q1</strong> 报送表 Excel 文件，含合并表头，文件名格式：<code id="export-filename">经营者收入报送表_2026Q1.xls</code></p>
     <div class="actions">
       <button class="btn" onclick="document.getElementById('modal').classList.remove('show')">取消</button>
       <button class="btn btn-primary" onclick="doExport()">确认导出</button>
@@ -498,7 +735,7 @@
 // roleA: 角色互斥单选场景；roleB: 多角色兼具场景（数组）
 const PLATFORM_NAME = '唯普汽车';
 const DATA = {
-  '2026-04': [
+  '2026-Q1': [
     // 1. 纯卖家-企业（门店）
     { userName: 'HL76054912039', accountName: '广州市鹏成汽车销售有限公司', creditCode: '91440101MA9X1234A',
       roleA: '卖家', roleB: ['卖家'],
@@ -540,7 +777,7 @@ const DATA = {
       A: { goods: 1120000.00, goodsRefund: 18000.00, service: 0, serviceRefund: 0, orders: 14 },
       B: { goods: 1120000.00, goodsRefund: 18000.00, service: 34500.00, serviceRefund: 0, orders: 19 } },
   ],
-  '2026-03': [
+  '2025-Q4': [
     { userName: 'HL76054912039', accountName: '广州市鹏成汽车销售有限公司', creditCode: '91440101MA9X1234A',
       roleA: '卖家', roleB: ['卖家'],
       A: { goods: 1632000.00, goodsRefund: 22000.00, service: 0, serviceRefund: 0, orders: 15 },
@@ -550,8 +787,8 @@ const DATA = {
       A: { goods: 0, goodsRefund: 0, service: 76300.00, serviceRefund: 1200.00, orders: 19 },
       B: { goods: 0, goodsRefund: 0, service: 76300.00, serviceRefund: 1200.00, orders: 19 } },
   ],
-  '2026-02': [],
-  '2026-01': [],
+  '2025-Q3': [],
+  '2025-Q2': [],
 };
 
 // 扩展 Mock 数据，让分页能真正翻页演示（伪随机，可复现）
@@ -568,7 +805,7 @@ const DATA = {
     { suffix: '汽车过户代办服务部', role: '服务商' },
     { suffix: '汽车销售服务部',    role: '卖家' },
   ];
-  const list = DATA['2026-04'];
+  const list = DATA['2026-Q1'];
   const TARGET = 35;
   for (let i = list.length; i < TARGET; i++) {
     const city = cities[i % cities.length];
@@ -653,7 +890,7 @@ function render() {
   tbody.innerHTML = '';
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="16" style="text-align:center;color:#8c8c8c;padding:48px 0;">当月暂无数据</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="15" style="text-align:center;color:#8c8c8c;padding:48px 0;">当季度暂无数据</td></tr>`;
   } else {
     pagedRows.forEach((item, idx) => {
       const r = getRow(item, currentMode);
@@ -670,9 +907,8 @@ function render() {
         <td class="text-left">${item.accountName}</td>
         <td>${item.creditCode}</td>
         <td>${PLATFORM_NAME}</td>
-        <td class="text-left">${item.accountName}</td>
+        <td class="text-left">${item.trueName || item.accountName}</td>
         <td>${item.userName}</td>
-        <td class="role-col text-left">${r.role === '服务商' ? '—' : item.accountName}</td>
         <td class="role-col">${roleTag}</td>
         <td class="num">${fmtMoney(r.goods)}</td>
         <td class="num">${fmtMoney(r.goodsRefund)}</td>
@@ -700,7 +936,7 @@ function render() {
 }
 
 function resetFilter() {
-  document.getElementById('month-select').value = '2026-04';
+  document.getElementById('month-select').value = '2026-Q1';
   document.getElementById('search-input').value = '';
   currentPage = 1;
   render();
@@ -795,7 +1031,7 @@ function jumpPage() {
     }
     const role = isService ? '服务商' : '卖家';
     const payload = { goods, goodsRefund, service, serviceRefund, orders };
-    DATA['2026-04'].push({
+    DATA['2026-Q1'].push({
       userName, accountName, creditCode,
       roleA: role, roleB: [role],
       A: payload, B: { ...payload }
@@ -805,7 +1041,7 @@ function jumpPage() {
 
 function exportExcel() {
   const month = document.getElementById('month-select').value;
-  document.getElementById('export-month').textContent = month;
+  document.getElementById('export-month').textContent = month.replace('-', ' ');
   document.getElementById('export-filename').textContent = `经营者收入报送表_${month.replace('-','')}.xls`;
   document.getElementById('modal').classList.add('show');
 }
@@ -906,6 +1142,176 @@ function doExport() {
 }
 
 render();
+
+// ===== 视图切换 =====
+function switchView(view) {
+  document.querySelectorAll('.view').forEach(el => el.style.display = 'none');
+  document.getElementById('view-' + view).style.display = '';
+  document.querySelectorAll('.sidebar .menu-item').forEach(el => el.classList.remove('active'));
+  const menu = document.querySelector('.sidebar .menu-item[data-view="' + view + '"]');
+  if (menu) menu.classList.add('active');
+  const trail = document.getElementById('breadcrumb-trail');
+  if (view === 'report') {
+    trail.innerHTML = '<span class="home-icon">●</span><span class="crumb">财务管理</span><span class="crumb-sep">/</span><span class="crumb current">报表管理</span>';
+  } else if (view === 'user-list') {
+    trail.innerHTML = '<span class="home-icon">●</span><span class="crumb">业务数据</span><span class="crumb-sep">/</span><span class="crumb current">用户列表</span>';
+    if (!window.__ulInited) { renderUserList(); window.__ulInited = true; }
+  }
+  window.scrollTo(0, 0);
+}
+
+// ===== 用户列表 Mock =====
+// authStatus 默认视为「已认证」；未认证时认证类型展示为 '-'
+// 联系人导出口径：contact（经办人姓名）→ legalPerson（法人姓名）→ name（用户列表 · 姓名）
+// 公司地址导出口径：licenseAddr（营业执照地址）→ shopAddr（门店地址）→ 空（人工补录）
+const USER_LIST = [
+  { userName: 'mtestnewbie9', name: 'mtestnewbie9', phone: '18688850484', authType: '企业', creditCode: '91440101MA9X1234A', source: '新后台', regDate: '2026-05-08', balance: 4000, pending: 0, deposit: 6000, total: 10000, contact: '陈晓东', legalPerson: '陈晓东', licenseAddr: '广州市天河区珠江新城华夏路 8 号', shopAddr: '' },
+  { userName: 'test_b_260227', name: 'test_b_260227', phone: '13710260227', authType: '个人', creditCode: '', source: '新后台', regDate: '2026-02-27', balance: 0, pending: 0, deposit: 0, total: 0, contact: '', legalPerson: '', licenseAddr: '', shopAddr: '' },
+  { userName: 'sm26261', name: '诗名', phone: '18126862626', authType: '个体工商户', creditCode: '92440300MA9Y5678B', source: '新后台', regDate: '2026-02-06', balance: 0, pending: 0, deposit: 0, total: 0, contact: '诗名', legalPerson: '诗名', licenseAddr: '', shopAddr: '深圳市福田区华强北路 33 号' },
+  { userName: 'm_6959287538657203', name: '深圳全芯动力电子科技有限公司', phone: '18993828192', authType: '企业', creditCode: '91440300MA9F2211I', source: '智慧市场', regDate: '2026-01-28', balance: 0, pending: 0, deposit: 0, total: 0, contact: '林涛', legalPerson: '林志远', licenseAddr: '深圳市南山区科技园南区 12 栋', shopAddr: '' },
+  { userName: '13902837182', name: '吴江瑞丽的茶店', phone: '13902837182', authType: '个体工商户', creditCode: '92320500MA1P3344K', source: 'M_SAAS', regDate: '2026-01-28', balance: 0, pending: 0, deposit: 0, total: 0, contact: '吴瑞丽', legalPerson: '吴瑞丽', licenseAddr: '苏州市吴江区盛泽镇舜湖路 18 号', shopAddr: '' },
+  // 演示「经办人无 → 取法人姓名」回落
+  { userName: '13992837912', name: '吴江瑞丽的茶店', phone: '13992837912', authType: '个体工商户', creditCode: '92320500MA1P3344K', source: 'M_SAAS', regDate: '2026-01-26', balance: 0, pending: 0, deposit: 0, total: 0, contact: '', legalPerson: '吴瑞丽', licenseAddr: '苏州市吴江区盛泽镇舜湖路 18 号', shopAddr: '' },
+  // 演示「经办人/法人均无 → 取姓名」回落
+  { userName: '18903718291', name: '吴江瑞丽的茶店', phone: '18903718291', authType: '个体工商户', creditCode: '92320500MA1P3344K', source: 'M_SAAS', regDate: '2026-01-26', balance: 0, pending: 0, deposit: 0, total: 0, contact: '', legalPerson: '', licenseAddr: '', shopAddr: '苏州市吴江区盛泽镇分店' },
+  { userName: 'sm6', name: '石榴', phone: '18126863018', authType: '个人', creditCode: '', source: '新后台', regDate: '2025-10-17', balance: 0, pending: 0, deposit: 0, total: 0, contact: '', legalPerson: '', licenseAddr: '', shopAddr: '' },
+  { userName: 'test074', name: '074', phone: '18126863018', authType: '企业', creditCode: '91310115MA1H2233J', source: '新后台', regDate: '2025-07-31', balance: 93494, pending: 0, deposit: 6000, total: 100000, contact: '赵磊', legalPerson: '赵磊', licenseAddr: '上海市浦东新区张江高科技园区 9 号', shopAddr: '' },
+  // 演示「经办人无 → 取法人姓名」回落
+  { userName: 'test072', name: 'Wp123456', phone: '15744441111', authType: '企业', creditCode: '91310115MA1K5566L', source: '新后台', regDate: '2025-07-31', balance: 0, pending: 0, deposit: 0, total: 0, contact: '', legalPerson: '王培强', licenseAddr: '', shopAddr: '' },
+  { userName: 'm_5386008984178230', name: '广州市番禺区老湘村餐馆', phone: '15196529736', authType: '个体工商户', creditCode: '92440101MA9G7788M', source: '零售展厅', regDate: '2025-07-30', balance: 0, pending: 0, deposit: 0, total: 0, contact: '陈湘', legalPerson: '陈湘', licenseAddr: '广州市番禺区市桥街老湘村 5 号', shopAddr: '' },
+  { userName: 'yljtest2', name: 'hhhhhhh', phone: '13013011123', authType: '个人', creditCode: '', source: '新后台', regDate: '2025-07-29', balance: 0, pending: 0, deposit: 0, total: 0, contact: '', legalPerson: '', licenseAddr: '', shopAddr: '' },
+  { userName: 'HL76054912039', name: '广州市鹏成汽车销售有限公司', phone: '13800001111', authType: '企业', creditCode: '91440101MA9X1234A', source: '智慧市场', regDate: '2026-04-12', balance: 12000, pending: 0, deposit: 6000, total: 18000, contact: '黄志成', legalPerson: '黄志成', licenseAddr: '广州市白云区机场路 188 号', shopAddr: '' },
+  { userName: 'HL98712340567', name: '东莞市汇通汽车贸易服务商', phone: '13800003333', authType: '企业', creditCode: '91441900MA9A3344D', source: 'M_SAAS', regDate: '2026-02-18', balance: 2400, pending: 1200, deposit: 0, total: 3600, contact: '汪小明', legalPerson: '汪建国', licenseAddr: '东莞市南城区鸿福路 39 号', shopAddr: '' },
+  { userName: 'HL10293847562', name: '惠州市惠城区粤运汽车过户代办服务部', phone: '13800005555', authType: '个体工商户', creditCode: '92441300MA9D9900G', source: '新后台', regDate: '2026-01-22', balance: 1500, pending: 0, deposit: 0, total: 1500, contact: '', legalPerson: '梁运国', licenseAddr: '', shopAddr: '惠州市惠城区江北街 21 号' },
+  // 旧证件类型（组织机构代码已并入统一代码，此处模拟「其他证件」展示 '-'）
+  { userName: 'oldcert001', name: '某老牌民办非企业', phone: '13800009999', authType: '企业', creditCode: '', certOther: true, source: '新后台', regDate: '2024-11-03', balance: 500, pending: 0, deposit: 0, total: 500, contact: '', legalPerson: '张明华', licenseAddr: '', shopAddr: '' },
+  // 演示「未认证用户 → 认证类型展示 -」
+  { userName: 'pending_001', name: '李未审', phone: '13700001234', authStatus: '未认证', authType: '', creditCode: '', source: '新后台', regDate: '2026-05-12', balance: 0, pending: 0, deposit: 0, total: 0, contact: '', legalPerson: '', licenseAddr: '', shopAddr: '' },
+];
+
+let ulPage = 1;
+const UL_PAGE_SIZE = 12;
+
+function fmtUlMoney(n) {
+  if (n === 0) return '0';
+  return n.toLocaleString('zh-CN');
+}
+
+function getUlFiltered() {
+  const kw = (document.getElementById('ul-search').value || '').trim().toLowerCase();
+  const type = document.getElementById('ul-type').value;
+  const source = document.getElementById('ul-source').value;
+  return USER_LIST.filter(u => {
+    if (kw && !(u.userName.toLowerCase().includes(kw) || u.name.toLowerCase().includes(kw) || u.phone.includes(kw) || (u.creditCode || '').toLowerCase().includes(kw))) return false;
+    if (type && u.authType !== type) return false;
+    if (source && u.source !== source) return false;
+    return true;
+  });
+}
+
+function renderUserList() {
+  const filtered = getUlFiltered();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / UL_PAGE_SIZE));
+  if (ulPage > totalPages) ulPage = totalPages;
+  const start = (ulPage - 1) * UL_PAGE_SIZE;
+  const pageRows = filtered.slice(start, start + UL_PAGE_SIZE);
+
+  const tbody = document.getElementById('ul-table-body');
+  tbody.innerHTML = '';
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;color:#8c8c8c;padding:48px 0;">暂无数据</td></tr>';
+  } else {
+    pageRows.forEach(u => {
+      // 认证类型：未认证 → '-'
+      const showType = u.authStatus === '未认证' ? '-' : (u.authType || '-');
+      // 统一代码：未认证、个人、或证件非统一代码/组代 → '-'
+      const showCode = (u.authStatus !== '未认证' && u.authType !== '个人' && !u.certOther && u.creditCode) ? u.creditCode : '-';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="text-left">${u.userName}</td>
+        <td class="text-left">${u.name}</td>
+        <td>${u.phone}</td>
+        <td class="col-new">${showType}</td>
+        <td class="col-new">${showCode}</td>
+        <td>${u.source}</td>
+        <td>${u.regDate}</td>
+        <td class="num">${fmtUlMoney(u.balance)}</td>
+        <td class="num">${fmtUlMoney(u.pending)}</td>
+        <td class="num">${fmtUlMoney(u.deposit)}</td>
+        <td class="num">${fmtUlMoney(u.total)}</td>
+        <td><span class="link">详情</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // 分页
+  const pg = document.getElementById('ul-pagination');
+  pg.innerHTML = '';
+  if (filtered.length > UL_PAGE_SIZE) {
+    let html = `<span>共 ${filtered.length} 条</span>`;
+    html += `<button class="page-btn" ${ulPage===1?'disabled':''} onclick="ulPage--;renderUserList()">‹</button>`;
+    for (let p = 1; p <= totalPages; p++) {
+      html += `<button class="page-btn ${p===ulPage?'active':''}" onclick="ulPage=${p};renderUserList()">${p}</button>`;
+    }
+    html += `<button class="page-btn" ${ulPage===totalPages?'disabled':''} onclick="ulPage++;renderUserList()">›</button>`;
+    pg.innerHTML = html;
+  }
+}
+
+function toggleUserSpec() {
+  document.getElementById('ul-spec-modal-mask').classList.toggle('show');
+}
+
+function toggleUlFilter() {
+  const adv = document.getElementById('ul-filter-advanced');
+  const btn = document.getElementById('ul-filter-toggle');
+  const collapsed = adv.style.display === 'none';
+  adv.style.display = collapsed ? 'flex' : 'none';
+  btn.innerHTML = collapsed ? '收起筛选 <span class="arr">▲</span>' : '展开筛选 <span class="arr">▼</span>';
+}
+function closeUserSpec(e) {
+  if (e.target.id === 'ul-spec-modal-mask') toggleUserSpec();
+}
+
+function exportUserList() {
+  const rows = getUlFiltered();
+  if (rows.length === 0) { alert('当前筛选条件无数据可导出'); return; }
+
+  // 列顺序：表格原有列 + 新增 4 列（认证类型、统一代码、联系人、公司地址）
+  const headers = ['用户名', '姓名', '电话', '认证类型', '统一代码', '联系人', '公司地址', '来源', '注册日期', '可用余额(元)', '待确认收款(元)', '保证金(元)', '总金额(元)'];
+
+  const dataRows = rows.map(u => {
+    const showType = u.authStatus === '未认证' ? '-' : (u.authType || '-');
+    const showCode = (u.authStatus !== '未认证' && u.authType !== '个人' && !u.certOther && u.creditCode) ? u.creditCode : '-';
+    const contact = u.contact || u.legalPerson || u.name; // 经办人 → 法人 → 姓名
+    const address = u.licenseAddr || u.shopAddr || ''; // 营业执照 → 门店 → 空（人工补录）
+    return [u.userName, u.name, u.phone, showType, showCode, contact, address, u.source, u.regDate, u.balance, u.pending, u.deposit, u.total];
+  });
+
+  const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const ths = headers.map(h => `<th style="background:#f0f5ff;border:1px solid #999;padding:6px 10px;">${esc(h)}</th>`).join('');
+  const trs = dataRows.map(r => '<tr>' + r.map((c, i) => {
+    const isNum = i >= 9;
+    const style = `border:1px solid #999;padding:6px 10px;${isNum ? 'mso-number-format:\'#,##0\';text-align:right;' : ''}`;
+    return `<td style="${style}">${esc(c)}</td>`;
+  }).join('') + '</tr>').join('');
+
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>用户列表</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head>
+<body><table border="1" style="border-collapse:collapse;font-family:Microsoft YaHei;font-size:12px;"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></body></html>`;
+
+  const blob = new Blob(['﻿' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const today = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  a.download = `用户列表_${today}.xls`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 </script>
 
 </body>
