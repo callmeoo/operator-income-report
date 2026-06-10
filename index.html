@@ -276,6 +276,7 @@
       <input id="search-input" type="text" placeholder="名称/用户名/统一社会信用代码" style="min-width: 320px;" oninput="currentPage=1;render()" onkeydown="if(event.key==='Enter'){currentPage=1;render();}">
       <button class="btn btn-primary" onclick="currentPage=1;render()">搜索</button>
       <div class="right">
+        <button class="btn" onclick="openUpload()">上传汇和垫款数据</button>
         <button class="btn btn-spec" onclick="toggleSpec()">需求说明</button>
         <button class="btn btn-export" onclick="exportExcel()">导出 Excel</button>
       </div>
@@ -348,6 +349,7 @@
               <li><strong>初始化</strong>：<span style="color:#cf1322;font-weight:600;">功能上线后，需初始化 2026 年 1-3 月（2026 Q1）的数据</span>，作为首期报表数据。</li>
               <li><strong>版本归档</strong>：生成即锁定快照，事后流水变动不影响已生成期间的数据。</li>
               <li><strong>列表功能</strong>：季度筛选（默认当前已生成的最新季度）+ 经营者搜索（<code>accountName</code> / <code>userName</code> / 统一社会信用代码 模糊匹配）+ 分页（10/20/50/100 条/页）。</li>
+              <li><strong>汇和垫款数据上传</strong>（场景 2 配套）：提供<strong>数据上传入口</strong>，供汇和人工上传「汇和垫款收购车」销售收入数据，上传模板<strong>同当天的 Excel 表格</strong>；备选：线下人工提供给国萍姐。</li>
               <li><strong>导出</strong>：Excel，带合并表头，导出当前筛选条件下全部数据（不分页）。</li>
             </ul>
           </div>
@@ -389,7 +391,7 @@
             <table class="spec-table">
               <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
               <tbody>
-                <tr><td>7</td><td>销售货物收入总额</td><td><strong>业务定义</strong>：卖家在统计周期内通过平台销售车辆所获得的收入（不含退款）。<br><strong>取数来源</strong>：FNC 钱包流水，按<strong>清算季度</strong>归集（跨季计入次季度）。<br>分 <strong>3 类场景</strong>取数，<span style="color:#1677ff;">详见下方「销售货物收入 · 三类取数场景」卡片</span>。</td></tr>
+                <tr><td>7</td><td>销售货物收入总额</td><td><strong>业务定义</strong>：卖家在统计周期内通过平台销售车辆所获得的收入（不含退款）。<br><strong>取数来源</strong>：FNC 钱包流水，按<strong>清算季度</strong>归集（跨季计入次季度）；<span style="color:#d46b08;">场景 2（汇和垫款）为汇和人工上传数据</span>。<br>分 <strong>3 类场景</strong>取数，<span style="color:#1677ff;">详见下方「销售货物收入 · 三类取数场景」卡片</span>。</td></tr>
                 <tr><td>8</td><td>销售货物退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>卖家</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
                 <tr><td>9</td><td>销售货物收入净额</td><td><code>列 9 = 列 7 − 列 8</code>，生成时直接落库。</td></tr>
               </tbody>
@@ -411,8 +413,9 @@
                 </div>
               </div>
               <div style="border:1px solid #e5e6eb;border-left:4px solid #52c41a;border-radius:4px;padding:12px 14px;background:#f6ffed;font-size:12px;line-height:1.8;">
-                <div style="font-weight:600;color:#389e0d;margin-bottom:4px;">场景 2 · 门店使用「汇和垫款」</div>
-                <div><strong>公式</strong>：销售收入 = ① 汇和垫款户（摘要含「收回垫付车款」）的钱包流水 ＋ ② 汇和收益流水 − ③ SaaS 服务费 − ④ 零售溢价（摘要「衍生服务-零售溢价-结算」）。</div>
+                <div style="font-weight:600;color:#389e0d;margin-bottom:4px;">场景 2 · 门店使用「汇和垫款」（汇和人工上传）</div>
+                <div><strong>取数方式</strong>：此部分数据<strong>不走系统自动取数，由汇和人工上传</strong>——系统提供<strong>数据上传入口</strong>（上传模板<strong>同当天的 Excel 表格</strong>）；备选：线下人工提供给国萍姐。</div>
+                <div style="margin-top:4px;color:#86909c;">参考口径（上传数据的计算逻辑）：销售收入 = ① 汇和垫款户（摘要含「收回垫付车款」）的钱包流水 ＋ ② 汇和收益流水 − ③ SaaS 服务费 − ④ 零售溢价（摘要「衍生服务-零售溢价-结算」）。</div>
                 <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 粤QG2630</strong>（附图3）：<br>① 汇和垫款户 <code>+23,000</code>（收回垫付车款）<br>② 汇和收益 <code>+2,600</code>（车款·利润）<br>③ SaaS 服务费 <code>−600</code><br>④ 本单无零售溢价<br>→ 销售收入 = <code>23,000 + 2,600 − 600 = 25,000</code></div>
                 <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
                   <div class="spec-img-caption" style="font-size:11px;">📷 附图 3：粤 QG2630 · 钱包流水</div>
@@ -422,8 +425,9 @@
                 </div>
               </div>
               <div style="border:1px solid #e5e6eb;border-left:4px solid #722ed1;border-radius:4px;padding:12px 14px;background:#f9f0ff;font-size:12px;line-height:1.8;">
-                <div style="font-weight:600;color:#531dab;margin-bottom:4px;">场景 3 · 门店自垫款（按钱包流水明细汇总）</div>
-                <div><strong>公式</strong>：销售收入 = 钱包流水摘要「收车款（成交价）」或「收车款（成交价/合同价）」 ＋ 钱包流水摘要含「衍生服务-零售溢价-结算」或「衍生订单服务（零售溢价）」。</div>
+                <div style="font-weight:600;color:#531dab;margin-bottom:4px;">场景 3 · 门店自垫款（取门店自垫款账户流水）</div>
+                <div><strong>公式</strong>：销售收入 = 流水摘要「收车款（成交价）」或「收车款（成交价/合同价）」 ＋ 流水摘要含「衍生服务-零售溢价-结算」或「衍生订单服务（零售溢价）」。</div>
+                <div style="margin-top:6px;padding:8px 10px;background:#fff1f0;border-left:3px solid #cf1322;color:#cf1322;font-weight:600;">⚠️ 留意：零售溢价进入的是「门店自垫款账户」，不是「汇和收益账户」——汇和收益账户的零售溢价计入服务收入（见 ④ 服务收入 tab）。</div>
                 <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 粤A1H2Y4</strong>（附图2）：<br><code>+47,000</code>（收车款·成交价） ＋ 零售溢价金额<br>→ 销售收入 = <code>47,000 + 零售溢价</code></div>
                 <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
                   <div class="spec-img-caption" style="font-size:11px;">📷 附图 2：粤 A1H2Y4 · 钱包流水</div>
@@ -446,7 +450,7 @@
             <div style="padding:10px 12px;background:#f6ffed;border-left:3px solid #52c41a;font-size:12px;line-height:1.8;">
               <p style="margin:0;"><strong>服务收入 = ① 汇和收益的「衍生服务-零售溢价」 + ② 服务商的收入（衍生服务商 + 中间服务商）</strong>。</p>
               <ul style="padding-left:22px;margin:6px 0 0;">
-                <li><strong>汇和零售溢价</strong>：汇和收益钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。</li>
+                <li><strong>汇和零售溢价</strong>：汇和收益钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。<br><span style="color:#cf1322;font-size:11px;">⚠️ 与销售收入场景 3 区分：进入「门店自垫款账户」的零售溢价计入该门店的销售收入（见 ③ 销售收入 tab 场景 3），不在本项「汇和收益账户」口径内，两边账户不同、互不重复。</span></li>
                 <li><strong>衍生服务商收入</strong>：年检/提档/过户代办、铁牌费、改装修复、维修、保险等第三方衍生服务商在平台获得的服务费收入。</li>
                 <li><strong>中间服务商收入</strong>：订单清分时关联的中间服务商（订单表中撮合买卖双方交易、收取撮合佣金的「服务商」角色）的服务费收入。</li>
               </ul>
@@ -726,6 +730,23 @@
     <div class="actions">
       <button class="btn" onclick="document.getElementById('modal').classList.remove('show')">取消</button>
       <button class="btn btn-primary" onclick="doExport()">确认导出</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 汇和垫款数据上传弹窗（场景 2 配套功能） ===== -->
+<div class="modal-mask" id="upload-modal" onclick="closeUpload(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>上传汇和垫款数据</h3>
+    <p style="margin-bottom:8px;">「汇和垫款」收购车的销售收入（销售货物收入·场景 2）不走系统自动取数，由<strong>汇和人工上传</strong>，上传后并入对应经营者的「销售货物收入总额」。</p>
+    <p style="margin-bottom:8px;">上传模板：<strong>同当天的 Excel 表格</strong>　<a href="javascript:void(0)" style="color:#1677ff;">下载模板</a></p>
+    <div style="border:1px dashed #d9d9d9;border-radius:4px;padding:18px;text-align:center;color:#86909c;font-size:12px;cursor:pointer;background:#fafafa;">
+      ＋ 点击或拖拽文件到此处上传（.xls / .xlsx）
+    </div>
+    <p style="margin-top:8px;font-size:12px;color:#86909c;">备选通道：线下人工提供给国萍姐。</p>
+    <div class="actions">
+      <button class="btn" onclick="document.getElementById('upload-modal').classList.remove('show')">取消</button>
+      <button class="btn btn-primary" onclick="document.getElementById('upload-modal').classList.remove('show')">确认上传</button>
     </div>
   </div>
 </div>
@@ -1049,6 +1070,14 @@ function exportExcel() {
 
 function closeModal(e) {
   if (e.target.id === 'modal') document.getElementById('modal').classList.remove('show');
+}
+
+function openUpload() {
+  document.getElementById('upload-modal').classList.add('show');
+}
+
+function closeUpload(e) {
+  if (e.target.id === 'upload-modal') document.getElementById('upload-modal').classList.remove('show');
 }
 
 function toggleSpec() {
