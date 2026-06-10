@@ -315,22 +315,44 @@
             <div class="spec-section-title">2. 报送对象（经营者）</div>
             <ul>
               <li><strong>经营者</strong>：实名认证 = 已通过 且 认证主体类型 ∈ {企业, 个体工商户}的卖家（门店/车主，须为企业或个体）+ 服务商。</li>
-              <li><strong>卖家定义</strong>：订单表中，车款付款给到的用户 —— 可能是<strong>车主</strong>，也可能是<strong>门店</strong>。</li>
-              <li><strong>服务商定义</strong>（涵盖以下两类）：
+              <li><strong>卖家定义</strong>（按合同类型取值，合同截图见下方示例）：
+                <ol style="padding-left:22px;margin-top:4px;">
+                  <li><strong>委拍合同（二手车委托竞价协议）</strong>：取合同中的<strong>甲方</strong>（甲方即原车主；乙方为平台，不计入卖家）。</li>
+                  <li><strong>收购（转让/置换）合同（二手车转让协议）</strong>：取合同中的<strong>甲方和乙方</strong>（甲方是原车主，乙方是新车主）。</li>
+                </ol>
+              </li>
+              <li><strong>服务商定义</strong>（涵盖以下三类）：
                 <ol style="padding-left:22px;margin-top:4px;">
                   <li><strong>订单表中的"服务商"角色</strong>：撮合买卖双方交易的中间服务商（如订单详情页中的"服务商"账户，收取服务佣金）。</li>
                   <li><strong>衍生服务订单 - 项目与服务商管理中的服务商</strong>：在第三方服务下挂载的合作商（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险等），<strong>须为已认证的企业或个体工商户</strong>。</li>
+                  <li><strong>指定服务商账户（固定名单）</strong>：不在上述两类关系的自动识别范围内，按固定账户纳入——<strong>广州机动车拍卖中心有限公司</strong>（<strong>仅取账户 <code>pmzx02</code></strong>，其他账户不计入）、<strong>唯普云服务</strong>（登录用户名 <code>wpyunsy</code>）。</li>
                 </ol>
               </li>
               <li><strong>零流水经营者</strong>：已认证但当季度零流水的，仍输出一行，金额/笔数全部填 0。</li>
             </ul>
 
             <div class="spec-img-block">
-              <div class="spec-img-caption">📷 示例 1：订单详情页 — 标注「<strong>卖方取值</strong>」与「<strong>服务商取值 1</strong>」</div>
-              <img src="图片示例1-订单详情.png" alt="订单详情中的卖方与服务商取值示例" class="spec-img"
+              <div class="spec-img-caption">📷 卖家取值 · 合同 1：委拍合同（二手车委托竞价协议）→ 取<strong>甲方</strong></div>
+              <img src="委拍合同-原车主.png" alt="委拍合同-甲方即原车主" class="spec-img"
+                   onclick="zoomImg(this)"
+                   onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>委拍合同-原车主.png</code> 未找到，请将"二手车委托竞价协议"截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
+              <div class="spec-img-note">▸ 合同<strong>甲方</strong>（示例中"中山市广物君奥汽车销售服务有限公司"，标注"车主"）= <strong>卖家</strong>（原车主）；<br>▸ 乙方为平台（广东唯普汽车科技股份有限公司），不计入卖家。</div>
+            </div>
+
+            <div class="spec-img-block">
+              <div class="spec-img-caption">📷 卖家取值 · 合同 2：收购（转让/置换）合同（二手车转让协议）→ 取<strong>甲方 + 乙方</strong></div>
+              <img src="收购合同-原车主和新车主.png" alt="收购合同-原车主和新车主" class="spec-img"
+                   onclick="zoomImg(this)"
+                   onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>收购合同-原车主和新车主.png</code> 未找到，请将"二手车转让协议"截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
+              <div class="spec-img-note">▸ 合同<strong>甲方</strong>（示例中"李凌峰"，标注"车主"）= <strong>原车主</strong>，计入卖家；<br>▸ 合同<strong>乙方</strong>（示例中"佛山广物汇和汽车服务有限公司"，标注"门店"）= <strong>新车主</strong>，计入卖家。</div>
+            </div>
+
+            <div class="spec-img-block">
+              <div class="spec-img-caption">📷 示例 1：订单详情页 — <strong>服务商取值 1</strong></div>
+              <img src="图片示例1-订单详情.png" alt="订单详情中的服务商取值示例" class="spec-img"
                    onclick="zoomImg(this)"
                    onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>图片示例1-订单详情.png</code> 未找到，请将订单详情截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
-              <div class="spec-img-note">▸ 红框「车主/卖家」与「门店」对应清算款项接收方 = <strong>卖家取值</strong>（车款付款给到的账户）；<br>▸ 红框「服务商」（如截图中"广州市智茂汽车服务有限公司"）对应 = <strong>服务商取值 1</strong>。</div>
+              <div class="spec-img-note">▸ 红框「服务商」（如截图中"广州市智茂汽车服务有限公司"）= <strong>服务商取值 1</strong>。</div>
             </div>
 
             <div class="spec-img-block">
@@ -448,11 +470,12 @@
           <div class="spec-section">
             <div class="spec-section-title">8. 服务收入定义</div>
             <div style="padding:10px 12px;background:#f6ffed;border-left:3px solid #52c41a;font-size:12px;line-height:1.8;">
-              <p style="margin:0;"><strong>服务收入 = ① 汇和收益的「衍生服务-零售溢价」 + ② 服务商的收入（衍生服务商 + 中间服务商）</strong>。</p>
+              <p style="margin:0;"><strong>服务收入 = ① 汇和收益的「衍生服务-零售溢价」 + ② 服务商的收入（衍生服务商 + 中间服务商） + ③ 指定服务商账户的收入（固定名单）</strong>。</p>
               <ul style="padding-left:22px;margin:6px 0 0;">
                 <li><strong>汇和零售溢价</strong>：汇和收益钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。<br><span style="color:#cf1322;font-size:11px;">⚠️ 与销售收入场景 3 区分：进入「门店自垫款账户」的零售溢价计入该门店的销售收入（见 ③ 销售收入 tab 场景 3），不在本项「汇和收益账户」口径内，两边账户不同、互不重复。</span></li>
                 <li><strong>衍生服务商收入</strong>：年检/提档/过户代办、铁牌费、改装修复、维修、保险等第三方衍生服务商在平台获得的服务费收入。</li>
                 <li><strong>中间服务商收入</strong>：订单清分时关联的中间服务商（订单表中撮合买卖双方交易、收取撮合佣金的「服务商」角色）的服务费收入。</li>
+                <li><strong>指定服务商账户收入（固定名单）</strong>：不在订单/衍生服务关系的自动识别范围内，按固定账户纳入——<strong>广州机动车拍卖中心有限公司</strong>（<strong>仅取账户 <code>pmzx02</code></strong>，其他账户不计入）、<strong>唯普云服务</strong>（登录用户名 <code>wpyunsy</code>）；取数口径与其他服务商一致（「已提现已清算」流水按清算季度归集）。</li>
               </ul>
             </div>
           </div>
@@ -462,7 +485,7 @@
             <table class="spec-table">
               <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
               <tbody>
-                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算季度</strong>归集（跨季计入次季度）。<br><span style="color:#cf1322;font-weight:600;">公式：服务商「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）+ 汇和零售溢价</span></td></tr>
+                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算季度</strong>归集（跨季计入次季度）。<br><span style="color:#cf1322;font-weight:600;">公式：服务商「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）+ 汇和零售溢价</span><br><span style="color:#874d00;font-size:11px;">服务商范围含指定账户固定名单（<code>pmzx02</code> / <code>wpyunsy</code>），见上方「服务收入定义」③。</span></td></tr>
                 <tr><td>11</td><td>销售服务退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>服务商</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
                 <tr><td>12</td><td>销售服务收入净额</td><td><code>列 12 = 列 10 − 列 11</code>，生成时直接落库。</td></tr>
                 <tr><td>13</td><td>交易（订单）数量</td><td><strong>提现订单数 − 退车订单数</strong>；模板只 1 列，同一 <code>userName</code> 的卖家+服务商订单合并填入。<br><span style="color:#874d00;font-size:11px;">同一订单分多次提现按 1 单计；卖家退车时服务商佣金也须退回，对应退车订单数同时计入服务商侧。</span></td></tr>
