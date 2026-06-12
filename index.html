@@ -276,7 +276,7 @@
       <input id="search-input" type="text" placeholder="名称/用户名/统一社会信用代码" style="min-width: 320px;" oninput="currentPage=1;render()" onkeydown="if(event.key==='Enter'){currentPage=1;render();}">
       <button class="btn btn-primary" onclick="currentPage=1;render()">搜索</button>
       <div class="right">
-        <button class="btn" onclick="openUpload()">上传汇和垫款数据</button>
+        <button class="btn" onclick="openUpload()">上传汇和收入</button>
         <button class="btn btn-spec" onclick="toggleSpec()">需求说明</button>
         <button class="btn btn-export" onclick="exportExcel()">导出 Excel</button>
       </div>
@@ -323,9 +323,9 @@
               </li>
               <li><strong>服务商定义</strong>（涵盖以下三类）：
                 <ol style="padding-left:22px;margin-top:4px;">
-                  <li><strong>订单表中的"服务商"角色</strong>：撮合买卖双方交易的中间服务商（如订单详情页中的"服务商"账户，收取服务佣金）。</li>
+                  <li><strong>订单表中的"服务商"角色</strong>：撮合买卖双方交易的中间服务商，收取服务佣金 —— 即<strong>订单详情页的"服务商"账号</strong>，或<strong>门店配置（门店详情 · 业务相关）中的"服务商"账号</strong>。</li>
                   <li><strong>衍生服务订单 - 项目与服务商管理中的服务商</strong>：在第三方服务下挂载的合作商（年检代办、提档代办、过户代办、铁牌费、改装修复、维修、保险等），<strong>须为已认证的企业或个体工商户</strong>。</li>
-                  <li><strong>指定服务商账户（固定名单）</strong>：不在上述两类关系的自动识别范围内，按固定账户纳入——<strong>广州机动车拍卖中心有限公司</strong>（<strong>仅取账户 <code>pmzx02</code></strong>，其他账户不计入）、<strong>唯普云服务</strong>（登录用户名 <code>wpyunsy</code>）。</li>
+                  <li><strong>指定服务商账户（固定名单）</strong>：不在上述两类关系的自动识别范围内，按固定账户纳入——<strong>广州机动车拍卖中心有限公司</strong>（<strong>仅取账户 <code>pmzx02</code></strong>，其他账户不计入）、<strong>唯普云服务</strong>（账户 <code>wpybmz</code>）；取数口径见 ④ tab 服务收入定义 ④⑤。</li>
                 </ol>
               </li>
               <li><strong>零流水经营者</strong>：已认证但当季度零流水的，仍输出一行，金额/笔数全部填 0。</li>
@@ -371,7 +371,7 @@
               <li><strong>初始化</strong>：<span style="color:#cf1322;font-weight:600;">功能上线后，需初始化 2026 年 1-3 月（2026 Q1）的数据</span>，作为首期报表数据。</li>
               <li><strong>版本归档</strong>：生成即锁定快照，事后流水变动不影响已生成期间的数据。</li>
               <li><strong>列表功能</strong>：季度筛选（默认当前已生成的最新季度）+ 经营者搜索（<code>accountName</code> / <code>userName</code> / 统一社会信用代码 模糊匹配）+ 分页（10/20/50/100 条/页）。</li>
-              <li><strong>汇和垫款数据上传</strong>（场景 2 配套）：提供<strong>数据上传入口</strong>，供汇和人工上传「汇和垫款收购车」销售收入数据，上传模板<strong>同当天的 Excel 表格</strong>；备选：线下人工提供给国萍姐。</li>
+              <li><strong>汇和收入数据上传</strong>：「汇和」<strong>销售收入和服务收入</strong>不走系统自动取数，由汇和人工上传，上传后并落入对应经营者的数据中（列表页入口「<strong>上传汇和收入</strong>」）；上传模板<strong>同报送表样式、不含「角色」列</strong>（弹窗内支持下载 <strong>Excel 预填模板</strong>——列 1-6 已预填汇和主体，待补充收入/退款/其他数据；及 <strong>CSV 示例模板</strong>）；上传成功后展示本次上传数据明细（文件名、行数、内容预览）供核对。</li>
               <li><strong>导出</strong>：Excel，带合并表头，导出当前筛选条件下全部数据（不分页）。</li>
             </ul>
           </div>
@@ -398,13 +398,13 @@
 
         </div>
 
-        <!-- Tab 3：销售收入退款交易笔数（列 7-9 + 销售货物收入三类取数场景） -->
+        <!-- Tab 3：销售收入退款交易笔数（列 7-9 + 销售货物收入四类取数场景） -->
         <div class="spec-tab-panel" id="spec-tab-3">
           <div class="spec-section">
             <div class="spec-section-title">5. 销售收入定义</div>
             <div style="padding:10px 12px;background:#f6f9ff;border-left:3px solid #1677ff;font-size:12px;line-height:1.8;">
               <p style="margin:0;"><strong>销售收入 = 收车款</strong>（卖家通过平台销售车辆所获得的车款收入）。</p>
-              <p style="margin:6px 0 0;">📌 <strong>门店自垫款场景的销售收入包含零售溢价</strong>（详见下方「销售货物收入 · 三类取数场景」中的场景 3）。</p>
+              <p style="margin:6px 0 0;">📌 <strong>门店自垫款场景的销售收入包含零售溢价</strong>（详见下方「销售货物收入 · 四类取数场景」中的场景 3）。</p>
             </div>
           </div>
 
@@ -413,7 +413,7 @@
             <table class="spec-table">
               <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
               <tbody>
-                <tr><td>7</td><td>销售货物收入总额</td><td><strong>业务定义</strong>：卖家在统计周期内通过平台销售车辆所获得的收入（不含退款）。<br><strong>取数来源</strong>：FNC 钱包流水，按<strong>清算季度</strong>归集（跨季计入次季度）；<span style="color:#d46b08;">场景 2（汇和垫款）为汇和人工上传数据</span>。<br>分 <strong>3 类场景</strong>取数，<span style="color:#1677ff;">详见下方「销售货物收入 · 三类取数场景」卡片</span>。</td></tr>
+                <tr><td>7</td><td>销售货物收入总额</td><td><strong>业务定义</strong>：卖家在统计周期内通过平台销售车辆所获得的收入（不含退款）。<br><strong>取数来源</strong>：FNC 钱包流水，按<strong>清算季度</strong>归集（跨季计入次季度）；<span style="color:#d46b08;">场景 2（汇和垫款）为汇和人工上传数据</span>。<br>分 <strong>4 类场景</strong>取数，<span style="color:#1677ff;">详见下方「销售货物收入 · 四类取数场景」卡片</span>。</td></tr>
                 <tr><td>8</td><td>销售货物退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>卖家</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
                 <tr><td>9</td><td>销售货物收入净额</td><td><code>列 9 = 列 7 − 列 8</code>，生成时直接落库。</td></tr>
               </tbody>
@@ -421,10 +421,10 @@
           </div>
 
           <div class="spec-section">
-            <div class="spec-section-title">7. 销售货物收入 · 三类取数场景（列 7 详细口径）</div>
+            <div class="spec-section-title">7. 销售货物收入 · 四类取数场景（列 7 详细口径）</div>
             <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
               <div style="border:1px solid #e5e6eb;border-left:4px solid #1677ff;border-radius:4px;padding:12px 14px;background:#f6f9ff;font-size:12px;line-height:1.8;">
-                <div style="font-weight:600;color:#1677ff;margin-bottom:4px;">场景 1 · 非汇和垫款车辆 + 非门店自垫款车辆（按提现汇总）</div>
+                <div style="font-weight:600;color:#1677ff;margin-bottom:4px;">场景 1 · 非垫款车辆（非汇和 / 唯普云 / 门店自垫款，按提现汇总）</div>
                 <div><strong>公式</strong>：销售收入 = 统计周期内「已提现已清算」流水汇总；<span style="color:#cf1322;font-weight:600;">合并提现中如包含负向流水（如售后扣款），需剔除</span>。</div>
                 <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 湘AN172F</strong>（附图1）：一次提现 30,000 元，明细含 车款 <code>+34,800</code>、售后扣款 <code>−4,800</code>；<br>→ 销售收入 = <code>34,800</code>（剔除负向 <code>−4,800</code>）。</div>
                 <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
@@ -436,15 +436,7 @@
               </div>
               <div style="border:1px solid #e5e6eb;border-left:4px solid #52c41a;border-radius:4px;padding:12px 14px;background:#f6ffed;font-size:12px;line-height:1.8;">
                 <div style="font-weight:600;color:#389e0d;margin-bottom:4px;">场景 2 · 门店使用「汇和垫款」（汇和人工上传）</div>
-                <div><strong>取数方式</strong>：此部分数据<strong>不走系统自动取数，由汇和人工上传</strong>——系统提供<strong>数据上传入口</strong>（上传模板<strong>同当天的 Excel 表格</strong>）；备选：线下人工提供给国萍姐。</div>
-                <div style="margin-top:4px;color:#86909c;">参考口径（上传数据的计算逻辑）：销售收入 = ① 汇和垫款户（摘要含「收回垫付车款」）的钱包流水 ＋ ② 汇和收益流水 − ③ SaaS 服务费 − ④ 零售溢价（摘要「衍生服务-零售溢价-结算」）。</div>
-                <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 粤QG2630</strong>（附图3）：<br>① 汇和垫款户 <code>+23,000</code>（收回垫付车款）<br>② 汇和收益 <code>+2,600</code>（车款·利润）<br>③ SaaS 服务费 <code>−600</code><br>④ 本单无零售溢价<br>→ 销售收入 = <code>23,000 + 2,600 − 600 = 25,000</code></div>
-                <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
-                  <div class="spec-img-caption" style="font-size:11px;">📷 附图 3：粤 QG2630 · 钱包流水</div>
-                  <img src="附图3-粤QG2630-钱包流水.png" alt="粤QG2630 钱包流水" class="spec-img"
-                       onclick="zoomImg(this)"
-                       onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>附图3-粤QG2630-钱包流水.png</code> 未找到。&lt;/div&gt;'">
-                </div>
+                <div><strong>取数方式</strong>：此部分数据<strong>不走系统自动取数，由汇和人工上传</strong>——系统提供<strong>数据上传入口</strong>（上传模板<strong>同当天的 Excel 表格</strong>）。</div>
               </div>
               <div style="border:1px solid #e5e6eb;border-left:4px solid #722ed1;border-radius:4px;padding:12px 14px;background:#f9f0ff;font-size:12px;line-height:1.8;">
                 <div style="font-weight:600;color:#531dab;margin-bottom:4px;">场景 3 · 门店自垫款（取门店自垫款账户流水）</div>
@@ -458,8 +450,12 @@
                        onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>附图2-粤A1H2Y4-钱包流水.png</code> 未找到。&lt;/div&gt;'">
                 </div>
               </div>
+              <div style="border:1px solid #e5e6eb;border-left:4px solid #13c2c2;border-radius:4px;padding:12px 14px;background:#e6fffb;font-size:12px;line-height:1.8;">
+                <div style="font-weight:600;color:#08979c;margin-bottom:4px;">场景 4 · 唯普云垫款（取唯普云垫款 + 唯普云收益账户流水）</div>
+                <div><strong>公式</strong>：销售收入 = <strong>唯普云垫款账户</strong>（<code>wpydk</code>）摘要「收回垫付车款」的钱包流水 ＋ <strong>唯普云收益账户</strong>（<code>wpuyunsy</code>）的<strong>全部</strong>钱包流水。</div>
+              </div>
               <div style="font-size:12px;color:#86909c;line-height:1.7;padding:4px 2px;">
-                💡 <strong>说明</strong>：三类场景按车辆的垫款方式互斥归类 —— 场景 1 覆盖既非汇和垫款也非门店自垫款的常规车辆；场景 2 仅对应汇和垫款；场景 3 仅对应门店自垫款。
+                💡 <strong>说明</strong>：四类场景按车辆的垫款方式互斥归类 —— 场景 1 覆盖无垫款的常规车辆；场景 2 仅对应汇和垫款；场景 3 仅对应门店自垫款；场景 4 仅对应唯普云垫款。
               </div>
             </div>
           </div>
@@ -470,13 +466,22 @@
           <div class="spec-section">
             <div class="spec-section-title">8. 服务收入定义</div>
             <div style="padding:10px 12px;background:#f6ffed;border-left:3px solid #52c41a;font-size:12px;line-height:1.8;">
-              <p style="margin:0;"><strong>服务收入 = ① 汇和收益的「衍生服务-零售溢价」 + ② 服务商的收入（衍生服务商 + 中间服务商） + ③ 指定服务商账户的收入（固定名单）</strong>。</p>
+              <p style="margin:0;"><strong>服务收入 = ① 汇和零售溢价（人工上传） + ② 中间服务商收入 + ③ 衍生服务商收入 + ④ 广州机拍（pmzx02）收入 + ⑤ 唯普云服务（wpybmz）收入</strong>。</p>
               <ul style="padding-left:22px;margin:6px 0 0;">
-                <li><strong>汇和零售溢价</strong>：汇和收益钱包流水中摘要包含「衍生服务-零售溢价-结算」的流水，归属「钱包转出账户」对应 <code>userName</code>（服务商）。<br><span style="color:#cf1322;font-size:11px;">⚠️ 与销售收入场景 3 区分：进入「门店自垫款账户」的零售溢价计入该门店的销售收入（见 ③ 销售收入 tab 场景 3），不在本项「汇和收益账户」口径内，两边账户不同、互不重复。</span></li>
-                <li><strong>衍生服务商收入</strong>：年检/提档/过户代办、铁牌费、改装修复、维修、保险等第三方衍生服务商在平台获得的服务费收入。</li>
-                <li><strong>中间服务商收入</strong>：订单清分时关联的中间服务商（订单表中撮合买卖双方交易、收取撮合佣金的「服务商」角色）的服务费收入。</li>
-                <li><strong>指定服务商账户收入（固定名单）</strong>：不在订单/衍生服务关系的自动识别范围内，按固定账户纳入——<strong>广州机动车拍卖中心有限公司</strong>（<strong>仅取账户 <code>pmzx02</code></strong>，其他账户不计入）、<strong>唯普云服务</strong>（登录用户名 <code>wpyunsy</code>）；取数口径与其他服务商一致（「已提现已清算」流水按清算季度归集）。</li>
+                <li><strong>① 汇和收益中的「衍生服务-零售溢价」</strong>：由<strong>汇和人工手动上传</strong>（走「上传汇和收入」通道，不再从汇和收益钱包流水自动取数）。<br><span style="color:#cf1322;font-size:11px;">⚠️ 与销售收入场景 3 区分：进入「门店自垫款账户」的零售溢价计入该门店的销售收入（见 ③ 销售收入 tab 场景 3），两边账户不同、互不重复。</span></li>
+                <li><strong>② 中间服务商收入</strong>（门店绑定的服务商账户，即订单清分时关联的服务商）：按<strong>已提现（提现执行完毕）</strong>流水汇总（剔除合并提现中「提现为负数的款项」）。</li>
+                <li><strong>③ 衍生服务商收入</strong>：年检/提档/过户代办、铁牌费、改装修复、维修、保险等第三方衍生服务商在平台获得的服务费收入，按<strong>已提现（提现执行完毕）</strong>流水汇总（剔除合并提现中「提现为负数的款项」）。</li>
+                <li><strong>④ 广州机动车拍卖中心有限公司</strong>（<strong>仅取账户 <code>pmzx02</code></strong>，其他账户不计入）：机拍只有服务收入——服务收入 = 账户 <code>pmzx02</code> 钱包流水中摘要「<strong>收车款（利润）</strong>」汇总；退款金额 = 该账户流水摘要「<strong>订单售后款项</strong>」汇总求和（案例见下方附图 4）。</li>
+                <li><strong>⑤ 唯普云服务</strong>（账户 <code>wpybmz</code>）：按<strong>已提现（提现执行完毕）</strong>流水汇总（剔除合并提现中「提现为负数的款项」）；退款金额 = 该账户流水摘要「<strong>订单售后款项</strong>」汇总求和。</li>
               </ul>
+            </div>
+
+            <div style="margin-top:8px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;font-size:12px;color:#874d00;line-height:1.8;">📌 <strong>案例｜广州机拍 <code>pmzx02</code> · 钱包流水</strong>（附图 4）：摘要「收车款（利润）」的流水（红框，如 +300.00）= 机拍<strong>服务收入</strong>取数范围；摘要含「订单售后款项」的负向流水（如 −35,500.00「扣减订单售后款项」）= <strong>退款金额</strong>取数范围；其余摘要（如「收车款（成交价/合同价）」）不计入机拍服务收入。</div>
+            <div class="spec-img-block">
+              <div class="spec-img-caption" style="font-size:11px;">📷 附图 4：广州机拍 pmzx02 · 钱包流水（摘要「收车款（利润）」红框标注）</div>
+              <img src="附图4-机拍pmzx02-钱包流水.png" alt="广州机拍 pmzx02 钱包流水" class="spec-img"
+                   onclick="zoomImg(this)"
+                   onerror="this.outerHTML='&lt;div class=&quot;spec-img-missing&quot;&gt;⚠️ 图片 <code>附图4-机拍pmzx02-钱包流水.png</code> 未找到，请将机拍 pmzx02 钱包流水截图保存为该文件名并放置在项目根目录。&lt;/div&gt;'">
             </div>
           </div>
 
@@ -485,8 +490,8 @@
             <table class="spec-table">
               <thead><tr><th style="width:40px;">列</th><th style="width:200px;">字段</th><th>公式 / 口径</th></tr></thead>
               <tbody>
-                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：FNC 钱包流水中状态 = 「已提现已清算」的流水，按<strong>清算季度</strong>归集（跨季计入次季度）。<br><span style="color:#cf1322;font-weight:600;">公式：服务商「已提现已清算」流水汇总（剔除合并提现中「提现为负数的款项」）+ 汇和零售溢价</span><br><span style="color:#874d00;font-size:11px;">服务商范围含指定账户固定名单（<code>pmzx02</code> / <code>wpyunsy</code>），见上方「服务收入定义」③。</span></td></tr>
-                <tr><td>11</td><td>销售服务退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>服务商</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。</td></tr>
+                <tr><td>10</td><td>销售服务收入总额</td><td><strong>收入取数</strong>：按上方「服务收入定义」五类构成汇总，按季度归集。<br><span style="color:#cf1322;font-weight:600;">公式：②③⑤ 按「已提现（提现执行完毕）」流水汇总（剔除合并提现中「提现为负数的款项」）＋ ① 汇和零售溢价（人工上传并入）＋ ④ 机拍 pmzx02 摘要「收车款（利润）」汇总</span><br><span style="color:#874d00;font-size:11px;">指定账户固定名单：<code>pmzx02</code>（广州机拍）/ <code>wpybmz</code>（唯普云服务），见上方定义 ④⑤。</span></td></tr>
+                <tr><td>11</td><td>销售服务退款金额</td><td><strong>退款金额</strong>：统计周期内，<strong>服务商</strong>账户负向流水之和（剔除提现类型的负向流水），取绝对值。<br><span style="color:#874d00;font-size:11px;">指定账户（<code>pmzx02</code> / <code>wpybmz</code>）的退款 = 该账户流水摘要「订单售后款项」汇总求和（见定义 ④⑤）。</span></td></tr>
                 <tr><td>12</td><td>销售服务收入净额</td><td><code>列 12 = 列 10 − 列 11</code>，生成时直接落库。</td></tr>
                 <tr><td>13</td><td>交易（订单）数量</td><td><strong>提现订单数 − 退车订单数</strong>；模板只 1 列，同一 <code>userName</code> 的卖家+服务商订单合并填入。<br><span style="color:#874d00;font-size:11px;">同一订单分多次提现按 1 单计；卖家退车时服务商佣金也须退回，对应退车订单数同时计入服务商侧。</span></td></tr>
               </tbody>
@@ -757,19 +762,34 @@
   </div>
 </div>
 
-<!-- ===== 汇和垫款数据上传弹窗（场景 2 配套功能） ===== -->
+<!-- ===== 汇和收入数据上传弹窗（场景 2 配套功能） ===== -->
 <div class="modal-mask" id="upload-modal" onclick="closeUpload(event)">
-  <div class="modal" onclick="event.stopPropagation()">
-    <h3>上传汇和垫款数据</h3>
-    <p style="margin-bottom:8px;">「汇和垫款」收购车的销售收入（销售货物收入·场景 2）不走系统自动取数，由<strong>汇和人工上传</strong>，上传后并入对应经营者的「销售货物收入总额」。</p>
-    <p style="margin-bottom:8px;">上传模板：<strong>同当天的 Excel 表格</strong>　<a href="javascript:void(0)" style="color:#1677ff;">下载模板</a></p>
-    <div style="border:1px dashed #d9d9d9;border-radius:4px;padding:18px;text-align:center;color:#86909c;font-size:12px;cursor:pointer;background:#fafafa;">
-      ＋ 点击或拖拽文件到此处上传（.xls / .xlsx）
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:560px;">
+    <!-- 步骤 1：选择文件 -->
+    <div id="upload-step-pick">
+      <h3>上传汇和收入数据</h3>
+      <p style="margin-bottom:8px;">「汇和」销售收入和服务收入不走系统自动取数，由<strong>汇和人工上传</strong>，上传后并落入对应经营者的数据中。</p>
+      <p style="margin-bottom:8px;">上传模板：<strong>同报送表样式，不含「角色」列</strong>　<a href="汇和收入数据上传模板.xlsx" download style="color:#1677ff;">下载模板（Excel · 预填汇和主体）</a>　<a href="javascript:void(0)" style="color:#1677ff;" onclick="downloadUploadTemplate()">下载模板（CSV · 示例数据）</a></p>
+      <p style="margin:-4px 0 8px;font-size:12px;color:#86909c;">Excel 模板中列 1-6（经营者基础信息）已预填，汇和需补充：① 收入　② 退款　③ 其他相关数据（收入净额、交易笔数）。</p>
+      <div id="upload-dropzone" style="border:1px dashed #d9d9d9;border-radius:4px;padding:18px;text-align:center;color:#86909c;font-size:12px;cursor:pointer;background:#fafafa;"
+           onclick="document.getElementById('upload-file-input').click()"
+           ondragover="event.preventDefault();this.style.borderColor='#1677ff';"
+           ondragleave="this.style.borderColor='#d9d9d9';"
+           ondrop="handleUploadDrop(event)">＋ 点击或拖拽文件到此处上传（.xls / .xlsx / .csv）</div>
+      <input type="file" id="upload-file-input" accept=".xls,.xlsx,.csv" style="display:none;" onchange="handleUploadPick(this.files)">
+      <div class="actions" style="margin-top:16px;">
+        <button class="btn" onclick="closeUploadModal()">取消</button>
+        <button class="btn btn-primary" onclick="confirmUpload()">确认上传</button>
+      </div>
     </div>
-    <p style="margin-top:8px;font-size:12px;color:#86909c;">备选通道：线下人工提供给国萍姐。</p>
-    <div class="actions">
-      <button class="btn" onclick="document.getElementById('upload-modal').classList.remove('show')">取消</button>
-      <button class="btn btn-primary" onclick="document.getElementById('upload-modal').classList.remove('show')">确认上传</button>
+    <!-- 步骤 2：上传结果（查看本次上传的数据） -->
+    <div id="upload-step-result" style="display:none;">
+      <h3>✅ 上传成功</h3>
+      <div id="upload-result-body"></div>
+      <div class="actions" style="margin-top:16px;">
+        <button class="btn" onclick="resetUpload()">重新上传</button>
+        <button class="btn btn-primary" onclick="closeUploadModal()">完成</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1096,11 +1116,117 @@ function closeModal(e) {
 }
 
 function openUpload() {
+  resetUpload();
   document.getElementById('upload-modal').classList.add('show');
 }
 
 function closeUpload(e) {
   if (e.target.id === 'upload-modal') document.getElementById('upload-modal').classList.remove('show');
+}
+
+function closeUploadModal() {
+  document.getElementById('upload-modal').classList.remove('show');
+}
+
+// ===== 汇和收入数据上传（场景 2 配套，原型演示态：不实际入库） =====
+let uploadPickedFile = null;
+
+function downloadUploadTemplate() {
+  // 模板样式同报送表，但不含「角色」审计列；内置 3 行 mock 示例（纯销售 / 纯服务 / 销售+服务）
+  const rows = [
+    ['是否已取得登记证照', '名称（姓名）', '统一社会信用代码（纳税人识别号）', '收入来源的互联网平台名称', '收入来源的店铺（用户）名称', '收入来源的店铺（用户）唯一标识码', '销售货物收入总额', '销售货物退款金额', '销售货物收入净额', '销售服务收入总额', '销售服务退款金额', '销售服务收入净额', '交易（订单）数量（笔）'],
+    ['是', '广州市鹏成汽车销售有限公司', '91440101MA9X1234A', '唯普汽车', '广州市鹏成汽车销售有限公司', 'HL76054912039', '1856000.00', '32000.00', '1824000.00', '0.00', '0.00', '0.00', '18'],
+    ['是', '佛山市禅城区粤泰汽车服务有限公司', '91440605MA9Z1122C', '唯普汽车', '佛山市禅城区粤泰汽车服务有限公司', 'T2112230002', '0.00', '0.00', '0.00', '89400.00', '4500.00', '84900.00', '24'],
+    ['是', '东莞市汇通汽车贸易服务商', '91441900MA9A3344D', '唯普汽车', '东莞市汇通汽车贸易服务商', 'HL98712340567', '425000.00', '8200.00', '416800.00', '156700.00', '0.00', '156700.00', '39']
+  ];
+  const csv = String.fromCharCode(0xFEFF) + rows.map(r => r.join(',')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '汇和收入数据上传模板.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+function handleUploadPick(files) {
+  if (!files || !files.length) return;
+  uploadPickedFile = files[0];
+  const dz = document.getElementById('upload-dropzone');
+  dz.style.borderColor = '#1677ff';
+  dz.style.color = '#1d2129';
+  dz.innerHTML = '📄 ' + escapeHtml(uploadPickedFile.name) + '（' + formatKB(uploadPickedFile.size) + '）　<span style="color:#86909c;">点击可重新选择</span>';
+}
+
+function handleUploadDrop(e) {
+  e.preventDefault();
+  e.currentTarget.style.borderColor = '#d9d9d9';
+  handleUploadPick(e.dataTransfer.files);
+}
+
+function formatKB(bytes) { return bytes < 1024 ? bytes + ' B' : (bytes / 1024).toFixed(1) + ' KB'; }
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+function confirmUpload() {
+  if (!uploadPickedFile) {
+    const dz = document.getElementById('upload-dropzone');
+    dz.style.borderColor = '#f53f3f';
+    dz.style.color = '#f53f3f';
+    dz.textContent = '请先选择文件 —— 点击或拖拽文件到此处（.xls / .xlsx / .csv）';
+    return;
+  }
+  const f = uploadPickedFile;
+  const info = { name: f.name, size: formatKB(f.size), time: new Date().toLocaleString('zh-CN', { hour12: false }) };
+  if (/\.csv$/i.test(f.name)) {
+    const reader = new FileReader();
+    reader.onload = () => renderUploadResult(info, parseCsvPreview(String(reader.result)));
+    reader.readAsText(f, 'utf-8');
+  } else {
+    renderUploadResult(info, null);
+  }
+}
+
+function parseCsvPreview(text) {
+  const lines = text.replace(new RegExp('^' + String.fromCharCode(0xFEFF)), '').split(/\r?\n/).filter(l => l.trim() !== '');
+  return { header: (lines[0] || '').split(','), rows: lines.slice(1).map(l => l.split(',')), total: Math.max(lines.length - 1, 0) };
+}
+
+function renderUploadResult(info, csv) {
+  let html = '<div style="background:#f7f8fa;border-radius:4px;padding:10px 12px;font-size:12px;color:#4e5969;line-height:1.9;">'
+    + '文件：<strong style="color:#1d2129;">' + escapeHtml(info.name) + '</strong>（' + info.size + '）<br>'
+    + '上传时间：' + info.time
+    + (csv ? '<br>数据行数：<strong style="color:#1d2129;">' + csv.total + '</strong> 行（不含表头）' : '')
+    + '</div>';
+  if (csv && csv.header.length) {
+    const shown = csv.rows.slice(0, 8);
+    html += '<div style="margin-top:10px;font-size:12px;color:#1d2129;font-weight:600;">数据预览' + (csv.total > 8 ? '（前 8 行，共 ' + csv.total + ' 行）' : '') + '</div>'
+      + '<div style="margin-top:6px;max-height:220px;overflow:auto;border:1px solid #e5e6eb;border-radius:4px;">'
+      + '<table style="border-collapse:collapse;width:100%;font-size:12px;">'
+      + '<tr>' + csv.header.map(h => '<th style="background:#f7f8fa;border-bottom:1px solid #e5e6eb;padding:5px 8px;text-align:left;white-space:nowrap;">' + escapeHtml(h) + '</th>').join('') + '</tr>'
+      + shown.map(r => '<tr>' + r.map(c => '<td style="border-bottom:1px solid #f2f3f5;padding:5px 8px;white-space:nowrap;">' + escapeHtml(c) + '</td>').join('') + '</tr>').join('')
+      + '</table></div>';
+  } else {
+    html += '<div style="margin-top:10px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;font-size:12px;color:#874d00;line-height:1.7;">Excel 文件已接收。原型环境仅解析 .csv 的内容预览，.xls / .xlsx 上线后由系统按模板字段校验解析；可下载 .csv 模板体验完整流程。</div>';
+  }
+  html += '<div style="margin-top:10px;font-size:12px;color:#86909c;line-height:1.7;">上述数据将并落入对应经营者的报表数据中（销售 / 服务收入对应列）。当前为原型演示，不实际入库。</div>';
+  document.getElementById('upload-result-body').innerHTML = html;
+  document.getElementById('upload-step-pick').style.display = 'none';
+  document.getElementById('upload-step-result').style.display = 'block';
+}
+
+function resetUpload() {
+  uploadPickedFile = null;
+  const input = document.getElementById('upload-file-input');
+  if (input) input.value = '';
+  const dz = document.getElementById('upload-dropzone');
+  if (dz) {
+    dz.style.borderColor = '#d9d9d9';
+    dz.style.color = '#86909c';
+    dz.textContent = '＋ 点击或拖拽文件到此处上传（.xls / .xlsx / .csv）';
+  }
+  document.getElementById('upload-step-pick').style.display = 'block';
+  document.getElementById('upload-step-result').style.display = 'none';
 }
 
 function toggleSpec() {
