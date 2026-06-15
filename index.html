@@ -371,7 +371,7 @@
                 <tr><td>4</td><td>收入来源的互联网平台名称</td><td>固定填 <code>唯普汽车</code>（平台运营主体名称，全表统一）。</td></tr>
                 <tr><td>5</td><td>收入来源的店铺<br>（用户）名称</td><td>取「<strong>用户列表 · 姓名</strong>」字段，对应 <code>trueName</code>。</td></tr>
                 <tr><td>6</td><td>收入来源的店铺（用户)<br>唯一标识码</td><td>取平台账号 <code>userName</code>，作为店铺/用户在平台内的唯一标识。</td></tr>
-                <tr><td>*</td><td>角色<br><span style="color:#d46b08;font-size:11px;">（平台内部审计列）</span></td><td><strong>取值逻辑</strong>：根据主体在订单/衍生服务中的身份打标 —— <code>卖家</code> / <code>服务商</code> / <code>卖家+服务商</code>。<br><span style="color:#874d00;font-size:11px;">用途：审计列，便于快速识别 <code>userName</code> 对应主体的角色，校验列 7-12 取数是否正确。<strong>导出 Excel 时一并包含该列。</strong></span></td></tr>
+                <tr><td>*</td><td>角色<br><span style="color:#d46b08;font-size:11px;">（平台内部审计列）</span></td><td><strong>取值逻辑</strong>（报送对象可能兼具双角色）：<br>· <code>卖家</code>：按<strong>委拍 / 收购合同</strong>识别——委拍合同取<strong>甲方</strong>（原车主）；收购合同取<strong>甲方 + 乙方</strong>（原车主 + 新车主）。<br>· <code>服务商</code>：按<strong>订单「服务商」+ 衍生服务商列表</strong>识别；其中<strong>机拍</strong>（账户 <code>pmzx02</code>）、<strong>唯普云服务</strong>（账户 <code>wpybmz</code>）<strong>算服务商</strong>。<br>· 同一 <code>userName</code> 同时命中两侧 → <strong><code>卖家+服务商</code></strong>（销售、服务两栏并存）。<br><span style="color:#874d00;font-size:11px;">用途：审计列，便于快速识别 <code>userName</code> 对应主体的角色，校验列 7-12 取数是否正确。<strong>导出 Excel 时一并包含该列。</strong></span></td></tr>
               </tbody>
             </table>
           </div>
