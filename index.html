@@ -391,7 +391,7 @@
           <div class="spec-section">
             <div class="spec-section-title">5. 列 7 · 销售收入定义</div>
             <div style="padding:10px 12px;background:#f6f9ff;border-left:3px solid #1677ff;font-size:12px;line-height:1.8;">
-              <p style="margin:0;"><strong>销售收入 = 统计周期内「已提现已清算」明细中款项包含「车款」的明细汇总</strong>；合并提现中如包含负向流水（如仲裁），需剔除。</p>
+              <p style="margin:0;"><strong>销售收入 = 统计周期内「已提现已清算」明细中款项等于「车款」的明细汇总</strong>；合并提现中如包含负向流水（如仲裁），需剔除。</p>
               <p style="margin:6px 0 0;">📌 <strong>门店自垫款场景的销售收入包含零售溢价</strong>（详见下方「四类取数场景」中的场景 3）。</p>
             </div>
             <ul style="padding-left:22px;margin:8px 0 0;font-size:12px;line-height:1.9;color:#4e5969;">
@@ -405,7 +405,7 @@
             <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
               <div style="border:1px solid #e5e6eb;border-left:4px solid #1677ff;border-radius:4px;padding:12px 14px;background:#f6f9ff;font-size:12px;line-height:1.8;">
                 <div style="font-weight:600;color:#1677ff;margin-bottom:4px;">场景 1 · 非垫款车辆（非汇和 / 唯普云 / 门店自垫款，按提现汇总）</div>
-                <div><strong>公式</strong>：销售收入 = 统计周期内「已提现已清算」明细中<strong>款项包含「车款」</strong>的明细汇总；<span style="color:#cf1322;font-weight:600;">合并提现中如包含负向流水（如仲裁），需剔除</span>。</div>
+                <div><strong>公式</strong>：销售收入 = 统计周期内「已提现已清算」明细中<strong>款项等于「车款」</strong>的明细汇总；<span style="color:#cf1322;font-weight:600;">合并提现中如包含负向流水（如仲裁），需剔除</span>。</div>
                 <div style="margin-top:6px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;color:#874d00;">📌 <strong>案例｜车牌 湘AN172F</strong>（附图1）：一次提现 30,000 元，明细含 车款 <code>+34,800</code>、售后扣款 <code>−4,800</code>；<br>→ 销售收入 = <code>34,800</code>（剔除负向 <code>−4,800</code>）。</div>
                 <div class="spec-img-block" style="margin-top:8px;padding:8px;background:#fff;">
                   <div class="spec-img-caption" style="font-size:11px;">📷 附图 1：湘 AN172F · 提现弹窗</div>
@@ -480,7 +480,7 @@
             <div style="padding:10px 12px;background:#f6f9ff;border-left:3px solid #1677ff;font-size:12px;line-height:1.8;">
               计数单位为<strong>车牌</strong>（排重）；报送模板只有 <strong>1 列</strong>（列 13，销售 + 服务合并）——同一 <code>userName</code> 的<strong>卖家身份订单数 + 服务商身份订单数</strong>合并填入，服务商侧规则见 ④ 服务收入退款 tab「服务订单数」子 tab。
             </div>
-            <div style="margin-top:8px;font-size:12px;font-weight:600;color:#1d2129;">卖方账户计数规则（统一口径，v0.38；汇和垫款除外）</div>
+            <div style="margin-top:8px;font-size:12px;font-weight:600;color:#1d2129;">卖方账户计数规则（统一口径，汇和垫款除外）</div>
             <div style="margin-top:6px;padding:8px 10px;background:#f6ffed;border-left:3px solid #52c41a;font-size:12px;line-height:1.8;"><strong>销售订单数 = 销售收入订单数 − 退款订单数</strong></div>
             <ul style="padding-left:22px;margin:6px 0 0;font-size:12px;line-height:1.9;color:#4e5969;">
               <li><strong>销售收入订单数</strong>：按<strong>提现流水车牌排重汇总</strong>。</li>
@@ -488,7 +488,7 @@
               <li><strong>汇和垫款</strong>：仍由<strong>汇和单独人工上传</strong>（随上传模板列 13）。</li>
               <li style="color:#86909c;">原四场景细分计数（非垫款 / 门店自垫款 / 唯普云垫款分别按提现或销售收入流水车牌、售后订单数按摘要【订单售后款】）自 v0.38 下线。</li>
             </ul>
-            <div style="margin-top:8px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;font-size:12px;color:#874d00;line-height:1.7;">⚠️ <strong>兼具卖家与服务商身份的账户</strong>：卖方侧（本页规则）与服务商侧（④ 服务收入退款 tab「服务订单数」子 tab 规则）分别计算后<strong>求和合并</strong>填入——该口径待与财务确认。</div>
+            <div style="margin-top:8px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;font-size:12px;color:#874d00;line-height:1.7;">⚠️ <strong>兼具卖家与服务商身份的账户</strong>：列 13 = <strong>服务商侧订单数（服务收入订单数 − 服务收入退款订单数）＋ 卖方侧订单数（销售收入订单数 − 销售收入退款订单数）</strong>，两侧分别计算后求和合并填入（服务商侧规则见 ④ 服务收入退款 tab「服务订单数」子 tab）。</div>
           </div>
           </div>
         </div>
@@ -508,11 +508,11 @@
             <p style="margin:0 0 8px;font-size:12px;color:#4e5969;"><strong>业务定义</strong>：服务商在统计周期内通过平台获得的服务收入（不含退款），按季度归集。</p>
             <div style="padding:10px 12px;background:#f6ffed;border-left:3px solid #52c41a;font-size:12px;line-height:1.8;">
               <p style="margin:0;"><strong>服务收入 包含 ① 汇和零售溢价（人工上传） + ② 中间服务商收入 + ③ 衍生服务商收入 + ④ 广州机拍（pmzx02）收入 + ⑤ 唯普云服务（wpybmz）收入</strong>。</p>
-              <p style="margin:8px 0 0;padding:6px 8px;background:#e8f4ff;border-radius:3px;line-height:1.7;"><strong>【一般取数口径｜适用 ②③⑤】</strong>：取账户<strong>已提现（提现执行完毕）</strong>流水中<strong>款项（摘要）非「车款」、非负向（金额为正）</strong>的明细汇总——与列 7 销售收入（取含「车款」明细）按『是否含车款』<strong>二分、互补不重叠</strong>；① 汇和人工上传、④ 机拍白名单（含「收车款（利润）」）不适用本口径。</p>
+              <p style="margin:8px 0 0;padding:6px 8px;background:#e8f4ff;border-radius:3px;line-height:1.7;"><strong>【一般取数口径｜适用 ②③⑤】</strong>：取账户<strong>已提现（提现执行完毕）</strong>流水中<strong>款项不含「车款」字样、非负向（金额为正）</strong>的明细汇总——<strong>列 7 取款项=「车款」、本口径取款项不含「车款」字样</strong>；二者对普通账户互补不重叠，机拍含车款字样的特殊款项（如「收车款（利润）」）由 ④ 白名单单独处理、不在本口径；① 汇和人工上传亦不适用本口径。</p>
               <ul style="padding-left:22px;margin:6px 0 0;">
                 <li><strong>① 汇和收益中的「衍生服务-零售溢价」</strong>：由<strong>汇和人工手动上传</strong>（走「上传汇和收入」通道，不再从汇和收益钱包流水自动取数）。<br><span style="color:#cf1322;font-size:11px;">⚠️ 与销售收入场景 3 区分：进入「门店自垫款账户」的零售溢价计入该门店的销售收入（见 ③ 销售收入退款 tab 场景 3），两边账户不同、互不重复。</span></li>
-                <li><strong>② 中间服务商收入</strong>（门店绑定的服务商账户，即订单清分时关联的服务商）：按<strong>服务收入一般口径</strong>取数（已提现流水中<strong>非「车款」、非负向</strong>的明细汇总，见上方）。</li>
-                <li><strong>③ 衍生服务商收入</strong>：年检/提档/过户代办、铁牌费、改装修复、维修、保险等第三方衍生服务商在平台获得的服务费收入，按<strong>服务收入一般口径</strong>取数（已提现流水中<strong>非「车款」、非负向</strong>的明细汇总，见上方）。</li>
+                <li><strong>② 中间服务商收入</strong>（门店绑定的服务商账户，即订单清分时关联的服务商）：按<strong>服务收入一般口径</strong>取数（已提现流水中<strong>款项不含「车款」字样、非负向</strong>的明细汇总，见上方）。</li>
+                <li><strong>③ 衍生服务商收入</strong>：年检/提档/过户代办、铁牌费、改装修复、维修、保险等第三方衍生服务商在平台获得的服务费收入，按<strong>服务收入一般口径</strong>取数（已提现流水中<strong>款项不含「车款」字样、非负向</strong>的明细汇总，见上方）。</li>
                 <li><strong>④ 广州机动车拍卖中心有限公司</strong>（<strong>仅取账户 <code>pmzx02</code></strong>，其他账户不计入）：机拍只有服务收入——服务收入 = 账户 <code>pmzx02</code> <strong>已提现（提现执行完毕）</strong>钱包流水中，按以下<strong>款项类型（摘要）白名单</strong>汇总求和（案例见下方附图 4）：
                   <ul style="padding-left:18px;margin:4px 0 0;">
                     <li>摘要「<strong>收车款（利润）</strong>」——盈利车辆常规入账，单笔即该车利润（附图 4 中每车 +300.00）；</li>
@@ -520,7 +520,7 @@
                     <li>摘要「<strong>收车款（成交价/合同价）</strong>」＋「<strong>亏损车款（利润）</strong>」（<strong>成对出现、轧差计入</strong>）——亏损车辆不走单笔利润入账，而是同一车牌同时生成正负两笔流水，两笔求和（轧差）后才是该车实际利润；通常<strong>合并在同一笔提现</strong>中执行、归属同一统计周期（附图 4：粤A326U3 +12,500.00 − 12,200.00 = <strong>+300.00</strong>）；<strong>仅同一车牌成对出现时纳入，未成对的单边流水不计入</strong>；</li>
                     <li style="color:#cf1322;">⚠️ 第 3 类需做<strong>车牌配对校验</strong>：同一车牌两类摘要齐备才成对纳入（轧差），未成对的「收车款（成交价/合同价）」不计入（否则整车价误计为收入）；负数「亏损车款（利润）」<strong>必须计入</strong>，不适用 ②③⑤ 的「剔除合并提现中负数款项」规则；旧口径「仅取收车款（利润）」会漏计亏损车。</li>
                   </ul></li>
-                <li><strong>⑤ 唯普云服务</strong>（账户 <code>wpybmz</code>）：按<strong>服务收入一般口径</strong>取数（已提现流水中<strong>非「车款」、非负向</strong>的明细汇总，见上方）。</li>
+                <li><strong>⑤ 唯普云服务</strong>（账户 <code>wpybmz</code>）：按<strong>服务收入一般口径</strong>取数（已提现流水中<strong>款项不含「车款」字样、非负向</strong>的明细汇总，见上方）。</li>
               </ul>
             </div>
             <div class="spec-img-block">
@@ -537,7 +537,6 @@
             <div class="spec-section-title">12. 列 11 · 销售服务退款金额（服务退款定义）</div>
             <ul style="padding-left:22px;margin:0;font-size:12px;line-height:1.9;color:#4e5969;">
               <li><strong>通用口径</strong>（按<strong>售后执行时间</strong>归属当季度）：统计周期内，匹配<strong>服务商</strong>账户钱包流水摘要包含「<strong>订单售后款项</strong>」，汇总求和。</li>
-              <li>除 <code>pmzx02</code> 外，全部服务商账户统一适用，含指定账户 <code>wpybmz</code>（唯普云服务），不再单设指定账户口径。</li>
               <li style="color:#cf1322;"><strong>⚠️ 例外｜广州机拍 <code>pmzx02</code>：退款金额（列 11）= 统计周期内该账户售后「已退车」订单数 × 300</strong>（机拍每车固定利润 300 元，退一车即退回该车利润；已退车订单数按订单售后类型 =「已退车」统计、车牌排重，取自订单表）；<strong>退款订单数 = 售后已退车订单数</strong>，同步计入列 13（见「服务订单数」子 tab）。</li>
               <li><strong>⚠️ 兼具卖家+服务商双角色的账户</strong>：因服务商角色基本不产生「订单售后款项」退款，该账户退款<strong>统一计入列 8（销售货物退款）</strong>，<strong>本列（列 11）按 0 处理</strong>，避免同一账户退款两列重复（指定账户 <code>pmzx02</code> 为纯服务商、走上方已退车×300 例外，不适用本条）。</li>
             </ul>
@@ -563,7 +562,7 @@
               <li><strong>交易订单数量 = 提现车牌数 − 售后订单数</strong><br>▸ 提现订单数：<strong>提现摘要车牌排重汇总</strong>（含「<strong>订单调账款项</strong>」摘要中的车牌，如附图 4 粤A00001）；<br>▸ 售后订单数：摘要为【<strong>订单售后款</strong>】的流水<strong>车牌排重汇总</strong>。</li>
               <li style="color:#cf1322;">⚠️ <strong>机拍 <code>pmzx02</code> 例外</strong>：该账户无【订单售后款】摘要流水，售后订单数（退款订单数）取<strong>订单售后类型 =「已退车」的订单车牌排重汇总</strong>（订单表，按<strong>售后执行时间</strong>归属当季度，与列 11 退款金额「已退车订单数 × 300」同源，见「服务退款」子 tab）。</li>
             </ul>
-            <div style="margin-top:8px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;font-size:12px;color:#874d00;line-height:1.7;">⚠️ <strong>兼具卖家与服务商身份的账户</strong>：服务商侧（本页规则）与卖方侧（③ 销售收入退款 tab「销售订单数」子 tab 规则）分别计算后<strong>求和合并</strong>填入——该口径待与财务确认。</div>
+            <div style="margin-top:8px;padding:8px 10px;background:#fff7e6;border-left:3px solid #fa8c16;font-size:12px;color:#874d00;line-height:1.7;">⚠️ <strong>兼具卖家与服务商身份的账户</strong>：列 13 = <strong>服务商侧订单数（服务收入订单数 − 服务收入退款订单数）＋ 卖方侧订单数（销售收入订单数 − 销售收入退款订单数）</strong>，两侧分别计算后求和合并填入（卖方侧规则见 ③ 销售收入退款 tab「销售订单数」子 tab）。</div>
           </div>
           </div>
 
